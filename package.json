@@ -1,7 +1,7 @@
 {
   "name": "@arkyn/store",
   "version": "1.0.0",
-  "description": "API para gerenciamento e registro de tráfego HTTP de múltiplas fontes, permitindo a organização e consulta de logs estruturados com recursos de gerenciamento de usuários e registros detalhados de requisições e respostas HTTP.",
+  "description": "Log storage and query API.",
   "type": "module",
   "license": "Apache-2.0",
   "author": "Arkyn | Lucas Gonçalves",
