@@ -31,4 +31,4 @@ COPY --from=build /app /app
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 
-CMD [ "bun", "run", "start" ]
+CMD ["sh", "-c", "bunx prisma generate && bunx prisma db push && bun run start"]
