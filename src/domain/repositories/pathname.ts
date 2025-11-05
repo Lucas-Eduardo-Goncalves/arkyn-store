@@ -7,7 +7,11 @@ type PathnameRepository = {
     searchParams: PathnameSearchParams
   ) => Promise<SearchResult<Pathname>>;
   findById: (pathnameId: string) => Promise<Pathname | null>;
-  findByValue: (value: string) => Promise<Pathname | null>;
+  findUnique: (
+    value: string,
+    domainId: string,
+    trafficSourceId: string
+  ) => Promise<Pathname | null>;
   createPathname: (pathname: Pathname) => Promise<Pathname>;
   deletePathname: (pathnameId: string) => Promise<void>;
 };

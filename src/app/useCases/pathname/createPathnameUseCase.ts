@@ -23,7 +23,11 @@ class CreatePathnameUseCase {
     const [trafficSource, domain, pathname] = await Promise.all([
       await this.trafficSourceRepository.findById(trafficSourceId),
       await this.domainRepository.findById(domainId),
-      await this.pathnameRepository.findByValue(value),
+      await this.pathnameRepository.findUnique(
+        value,
+        trafficSourceId,
+        domainId
+      ),
     ]);
 
     if (!trafficSource) {

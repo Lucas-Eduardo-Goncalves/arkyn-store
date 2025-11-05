@@ -41,9 +41,13 @@ class PrismaPathnameRepository implements PathnameRepository {
     return PathnameMapper.toEntity(pathname);
   }
 
-  async findByValue(value: string): Promise<Pathname | null> {
+  async findUnique(
+    value: string,
+    domainId: string,
+    trafficSourceId: string
+  ): Promise<Pathname | null> {
     const pathname = await databaseConnection.pathname.findFirst({
-      where: { value },
+      where: { value, domainId, trafficSourceId },
     });
 
     if (!pathname) return null;
