@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { hostname } from "os";
-import { version } from "../package.json";
+import { name, version } from "../package.json";
 
 import { handlersFactory } from "./app/handlers/handlersFactory";
 import { RouteLogMiddleware } from "./main/middlewares/routeLogMiddleware";
@@ -27,9 +27,10 @@ cacheDb.connect();
 
 app.use("*", (c, next) => RouteLogMiddleware.logRoute(c, next));
 
-app.get("/health-check", (c) =>
-  c.text(`Container: ${hostname()} - Service is healthy on version ${version}`)
-);
+app.get("/health-check", (c) => {
+  const message = `Service ${name} is healthy on container ${hostname()} using version ${version}`;
+  return c.text(message);
+});
 
 app.route("/core-logs", coreLogRoutes);
 app.route("/core-pathnames", corePathnameRoutes);
