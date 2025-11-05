@@ -14,8 +14,9 @@ class CreateResponseUseCase {
   ) {}
 
   getBodyPreview(body: string | null) {
-    if (!body) return null;
-    return body.slice(0, 200);
+    return body;
+    // if (!body) return null;
+    // return body.slice(0, 200);
   }
 
   async execute(input: InputProps) {
