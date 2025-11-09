@@ -2,9 +2,9 @@ import { PathnameSearchParams } from "../../app/search/pathnameSearchParams";
 import { SearchResult } from "../../app/shared/searchResult";
 import { Pathname } from "../../domain/entities/pathname";
 import { PathnameRepository } from "../../domain/repositories/pathname";
-import { cacheDb } from "../adapters/cacheDbAdapter";
 import { databaseConnection } from "../adapters/dbAdapter";
 import { PathnameMapper } from "../mappers/pathname";
+import { CacheService } from "../service/cache";
 
 class PrismaPathnameRepository implements PathnameRepository {
   async findAll(
@@ -28,7 +28,7 @@ class PrismaPathnameRepository implements PathnameRepository {
   }
 
   async findById(pathnameId: string): Promise<Pathname | null> {
-    const cached = await cacheDb.getJson<any>(pathnameId);
+    const cached = CacheService.get<Pathname>(pathnameId);
     if (cached) return PathnameMapper.toEntity(cached);
 
     const pathname = await databaseConnection.pathname.findUnique({
@@ -37,7 +37,7 @@ class PrismaPathnameRepository implements PathnameRepository {
 
     if (!pathname) return null;
 
-    await cacheDb.setJson(pathnameId, pathname);
+    CacheService.set(pathnameId, pathname);
     return PathnameMapper.toEntity(pathname);
   }
 

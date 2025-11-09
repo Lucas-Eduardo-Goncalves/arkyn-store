@@ -2,9 +2,10 @@ import { HttpTrafficSearchParams } from "../../app/search/httpTrafficSearchParam
 import { SearchResult } from "../../app/shared/searchResult";
 import { HttpTraffic } from "../../domain/entities/httpTraffic";
 import { HttpTrafficRepository } from "../../domain/repositories/httpTraffic";
-import { cacheDb } from "../adapters/cacheDbAdapter";
+
 import { databaseConnection } from "../adapters/dbAdapter";
 import { HttpTrafficMapper } from "../mappers/httpTraffic";
+import { CacheService } from "../service/cache";
 
 class PrismaHttpTrafficRepository implements HttpTrafficRepository {
   async findAll(
@@ -28,7 +29,7 @@ class PrismaHttpTrafficRepository implements HttpTrafficRepository {
   }
 
   async findById(httpTrafficId: string): Promise<HttpTraffic | null> {
-    const cached = await cacheDb.getJson<any>(httpTrafficId);
+    const cached = CacheService.get<HttpTraffic>(httpTrafficId);
     if (cached) return HttpTrafficMapper.toEntity(cached);
 
     const httpTraffic = await databaseConnection.httpTraffic.findUnique({
@@ -37,7 +38,7 @@ class PrismaHttpTrafficRepository implements HttpTrafficRepository {
 
     if (!httpTraffic) return null;
 
-    await cacheDb.setJson(httpTrafficId, httpTraffic);
+    CacheService.set(httpTrafficId, httpTraffic);
     return HttpTrafficMapper.toEntity(httpTraffic);
   }
 

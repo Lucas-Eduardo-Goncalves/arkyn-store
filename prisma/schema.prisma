@@ -39,7 +39,7 @@ model TrafficSource {
   webhook       Webhook[]
   shares        TrafficSourceShare[]
 
-  @@index([userId])
+  @@index([userId, createdAt, updatedAt])
 }
 
 enum WebhookType {
@@ -55,6 +55,8 @@ model Webhook {
   updatedAt       DateTime
   trafficSourceId String
   trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
+
+  @@index([type, level, createdAt, updatedAt])
 }
 
 enum SharePermission {
@@ -72,7 +74,7 @@ model TrafficSourceShare {
   trafficSource   TrafficSource   @relation(fields: [trafficSourceId], references: [id])
 
   @@unique([ownerId, sharedWithId, trafficSourceId])
-  @@index([sharedWithId, trafficSourceId])
+  @@index([sharedWithId, trafficSourceId, createdAt, updatedAt])
 }
 
 enum Protocol {
@@ -89,6 +91,8 @@ model Domain {
   trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
   pathname        Pathname[]
   httpTraffic     HttpTraffic[]
+
+  @@index([trafficSourceId, createdAt])
 }
 
 model Pathname {
@@ -100,6 +104,8 @@ model Pathname {
   trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
   domain          Domain        @relation(fields: [domainId], references: [id])
   httpTraffic     HttpTraffic[]
+
+  @@index([trafficSourceId, createdAt])
 }
 
 model HttpTraffic {
@@ -121,7 +127,7 @@ model HttpTraffic {
   request         Request       @relation(fields: [requestId], references: [id])
   response        Response      @relation(fields: [responseId], references: [id])
 
-  @@index([createdAt, level, trafficSourceId, domainId, pathnameId, method, status])
+  @@index([status, method, level, trafficUserId, trafficSourceId, elapsedTime, domainId, pathnameId, createdAt])
 }
 
 model Request {

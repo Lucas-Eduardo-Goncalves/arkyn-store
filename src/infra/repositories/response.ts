@@ -2,9 +2,9 @@ import { ResponseSearchParams } from "../../app/search/responseSearchParams";
 import { SearchResult } from "../../app/shared/searchResult";
 import { Response } from "../../domain/entities/response";
 import { ResponseRepository } from "../../domain/repositories/response";
-import { cacheDb } from "../adapters/cacheDbAdapter";
 import { databaseConnection } from "../adapters/dbAdapter";
 import { ResponseMapper } from "../mappers/response";
+import { CacheService } from "../service/cache";
 
 class PrismaResponseRepository implements ResponseRepository {
   async findAll(
@@ -28,7 +28,7 @@ class PrismaResponseRepository implements ResponseRepository {
   }
 
   async findById(responseId: string): Promise<Response | null> {
-    const cached = await cacheDb.getJson<any>(responseId);
+    const cached = CacheService.get<Response>(responseId);
     if (cached) return ResponseMapper.toEntity(cached);
 
     const response = await databaseConnection.response.findUnique({
@@ -37,7 +37,7 @@ class PrismaResponseRepository implements ResponseRepository {
 
     if (!response) return null;
 
-    await cacheDb.setJson(responseId, response);
+    CacheService.set(responseId, response);
     return ResponseMapper.toEntity(response);
   }
 

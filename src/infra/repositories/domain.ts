@@ -2,9 +2,10 @@ import { DomainSearchParams } from "../../app/search/domainSearchParams";
 import { SearchResult } from "../../app/shared/searchResult";
 import { Domain } from "../../domain/entities/domain";
 import { DomainRepository } from "../../domain/repositories/domain";
-import { cacheDb } from "../adapters/cacheDbAdapter";
+
 import { databaseConnection } from "../adapters/dbAdapter";
 import { DomainMapper } from "../mappers/domain";
+import { CacheService } from "../service/cache";
 
 class PrismaDomainRepository implements DomainRepository {
   async findAll(
@@ -28,7 +29,7 @@ class PrismaDomainRepository implements DomainRepository {
   }
 
   async findById(domainId: string): Promise<Domain | null> {
-    const cached = await cacheDb.getJson<any>(domainId);
+    const cached = CacheService.get<Domain>(domainId);
     if (cached) return DomainMapper.toEntity(cached);
 
     const domain = await databaseConnection.domain.findUnique({
@@ -37,7 +38,7 @@ class PrismaDomainRepository implements DomainRepository {
 
     if (!domain) return null;
 
-    await cacheDb.setJson(domainId, domain);
+    CacheService.set(domainId, domain);
     return DomainMapper.toEntity(domain);
   }
 

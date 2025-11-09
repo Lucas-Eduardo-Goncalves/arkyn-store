@@ -2,9 +2,9 @@ import { TrafficSourceSearchParams } from "../../app/search/trafficSourceSearchP
 import { SearchResult } from "../../app/shared/searchResult";
 import { TrafficSource } from "../../domain/entities/trafficSource";
 import { TrafficSourceRepository } from "../../domain/repositories/trafficSource";
-import { cacheDb } from "../adapters/cacheDbAdapter";
 import { databaseConnection } from "../adapters/dbAdapter";
 import { TrafficSourceMapper } from "../mappers/trafficSource";
+import { CacheService } from "../service/cache";
 
 class PrismaTrafficSourceRepository implements TrafficSourceRepository {
   async findAll(
@@ -31,7 +31,7 @@ class PrismaTrafficSourceRepository implements TrafficSourceRepository {
   }
 
   async findById(trafficSourceId: string): Promise<TrafficSource | null> {
-    const cached = await cacheDb.getJson<any>(trafficSourceId);
+    const cached = CacheService.get<TrafficSource>(trafficSourceId);
     if (cached) return TrafficSourceMapper.toEntity(cached);
 
     const trafficSource = await databaseConnection.trafficSource.findUnique({
@@ -40,7 +40,7 @@ class PrismaTrafficSourceRepository implements TrafficSourceRepository {
 
     if (!trafficSource) return null;
 
-    await cacheDb.setJson(trafficSourceId, trafficSource);
+    CacheService.set(trafficSourceId, trafficSource);
     return TrafficSourceMapper.toEntity(trafficSource);
   }
 

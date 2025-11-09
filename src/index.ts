@@ -5,7 +5,6 @@ import { name, version } from "../package.json";
 import { handlersFactory } from "./app/handlers/handlersFactory";
 import { RouteLogMiddleware } from "./main/middlewares/routeLogMiddleware";
 
-import { cacheDb } from "./infra/adapters/cacheDbAdapter";
 import { DiscordAdapter } from "./infra/adapters/discordAdapter";
 import { environmentVariables } from "./main/config/environmentVariables";
 import { coreLogRoutes } from "./main/routes/core-log";
@@ -23,7 +22,6 @@ const app = new Hono();
 
 handlersFactory();
 DiscordAdapter.getInstance();
-cacheDb.connect();
 
 app.use("*", (c, next) => RouteLogMiddleware.logRoute(c, next));
 
