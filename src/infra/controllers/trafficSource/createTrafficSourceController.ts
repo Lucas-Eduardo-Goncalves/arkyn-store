@@ -10,15 +10,15 @@ class CreateTrafficSourceController {
 
   async handle(route: RouteDTO) {
     try {
-      const { token } = await AuthMiddleware.authenticate(route);
+      const { userId } = await AuthMiddleware.authenticate(route);
 
       const schemaValidator = new SchemaValidatorAdapter(
         createTrafficSourceSchema
       );
 
-      const data = schemaValidator.validate({ ...route.request.body, token });
-
+      const data = schemaValidator.validate({ ...route.request.body, userId });
       const trafficSource = await this.createTrafficSourceUseCase.execute(data);
+
       return route.response.json(trafficSource, 201);
     } catch (error) {
       return ErrorHandlerAdapter.handle(error);

@@ -22,7 +22,7 @@ class HttpTrafficNotifier {
 
     await webhookService.send({
       title: `HttpTraffic - ${method} - ${httpTraffic.status}`,
-      description: `URL: ${domain.value}${pathname.value}\nElapsed Time: ${httpTraffic.elapsedTime}ms\nPanel URL: ${environmentVariables.ARKYN_PANEL_URL}/traffic/${httpTraffic.id}`,
+      description: `URL: ${domain.value}${pathname.value}\nElapsed Time: ${httpTraffic.elapsedTime}ms\nPanel URL: ${environmentVariables.MICRO_PANEL_URL}/traffic/${httpTraffic.id}`,
     });
   }
 }

@@ -5,7 +5,7 @@ import {
   PAGE_LIMIT_DEFAULT,
 } from "../../../app/shared/searchParams";
 
-const paginationSchema = z.object({
+const paginationSchema = z.strictObject({
   page: z
     .string()
     .optional()
@@ -16,7 +16,6 @@ const paginationSchema = z.object({
     .optional()
     .transform((val) => (val ? Number(val) : PAGE_LIMIT_DEFAULT))
     .pipe(z.number().int().min(1).optional()),
-  sort: z.string().optional(),
   sortDirection: z.enum(["asc", "desc"]).optional(),
 });
 

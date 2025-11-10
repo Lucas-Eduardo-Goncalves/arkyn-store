@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 import { paginationSchema } from "../template/pagination";
 
 const createTrafficSourceSchema = z.object({
@@ -8,6 +8,7 @@ const createTrafficSourceSchema = z.object({
     .min(1, "Traffic domain is required")
     .url("Invalid URL format"),
   token: z.string().min(1, "Authentication token is required"),
+  userId: z.string().uuid("Invalid user id format"),
 });
 
 const updateTrafficSourceSchema = z.object({
@@ -26,11 +27,12 @@ const deleteTrafficSourceSchema = z.object({
 
 const listTrafficSourcesSchema = paginationSchema.extend({
   userId: z.string().uuid("Invalid user id format"),
+  sort: z.enum(["createdAt", "updatedAt", "name"]).optional(),
 });
 
 export {
   createTrafficSourceSchema,
   deleteTrafficSourceSchema,
-  updateTrafficSourceSchema,
   listTrafficSourcesSchema,
+  updateTrafficSourceSchema,
 };

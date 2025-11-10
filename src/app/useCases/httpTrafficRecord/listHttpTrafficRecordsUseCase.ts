@@ -17,7 +17,7 @@ type InputProps = {
     responseBody?: any;
     queryParams?: any;
     method?: HttpMethod;
-    level?: "info" | "warning" | "DEBUG";
+    level?: "info" | "warning" | "fatal";
     trafficSourceId: string;
     status?: number;
     protocol?: "http" | "https";

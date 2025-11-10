@@ -25,6 +25,13 @@ const listHttpTrafficsSchema = paginationSchema.extend({
     .string()
     .min(1, "Traffic source id is required")
     .uuid("Invalid traffic source id format"),
+  status: z
+    .string()
+    .optional()
+    .transform((val) => (val ? parseInt(val, 10) : undefined))
+    .pipe(z.number().int("Status must be an integer").optional()),
+  method: z.enum(["get", "post", "put", "delete", "patch"]).optional(),
+  sort: z.enum(["elapsedTime", "status", "method", "level"]).optional(),
 });
 
 export {

@@ -3,7 +3,7 @@ import { SearchParams } from "../shared/searchParams";
 
 type Filter = {
   method?: HttpMethod;
-  level?: "info" | "warning" | "DEBUG";
+  level?: "info" | "warning" | "fatal";
   trafficSourceId: string;
   status?: number;
   protocol?: "http" | "https";

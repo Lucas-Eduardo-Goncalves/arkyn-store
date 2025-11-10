@@ -19,6 +19,7 @@ const listDomainsSchema = paginationSchema.extend({
     .string()
     .min(1, "Traffic source id is required")
     .uuid("Invalid traffic source id format"),
+  sort: z.enum(["createdAt", "value", "protocol"]).optional(),
 });
 
 export { createDomainSchema, deleteDomainSchema, listDomainsSchema };

@@ -11,10 +11,7 @@ class PrismaTrafficSourceRepository implements TrafficSourceRepository {
     searchParams: TrafficSourceSearchParams
   ): Promise<SearchResult<TrafficSource>> {
     const [trafficSources, count] = await Promise.all([
-      databaseConnection.trafficSource.findMany({
-        ...searchParams.toPrisma(),
-        orderBy: { createdAt: "desc" },
-      }),
+      databaseConnection.trafficSource.findMany(searchParams.toPrisma()),
       databaseConnection.trafficSource.count({
         where: searchParams.toPrisma().where,
       }),

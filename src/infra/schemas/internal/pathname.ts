@@ -40,6 +40,7 @@ const listPathnamesSchema = paginationSchema.extend({
     .string()
     .min(1, "Domain id is required")
     .uuid("Invalid domain id format"),
+  sort: z.enum(["value", "createdAt"]).optional(),
 });
 
 export { createPathnameSchema, deletePathnameSchema, listPathnamesSchema };

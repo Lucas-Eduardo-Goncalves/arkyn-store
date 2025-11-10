@@ -22,11 +22,11 @@ const SORT_DIRECTION_DEFAULT: SortDirection = "desc";
 const FILTER_DEFAULT = null;
 
 class SearchParams<Filter> {
-  protected _page: number = PAGE_DEFAULT;
-  protected _pageLimit: number = PAGE_LIMIT_DEFAULT;
-  protected _sort: string | null = SORT_DEFAULT;
-  protected _sortDirection: SortDirection = SORT_DIRECTION_DEFAULT;
-  protected _filter: Filter | null = FILTER_DEFAULT;
+  private _page: number = PAGE_DEFAULT;
+  private _pageLimit: number = PAGE_LIMIT_DEFAULT;
+  private _sort: string | null = SORT_DEFAULT;
+  private _sortDirection: SortDirection = SORT_DIRECTION_DEFAULT;
+  private _filter: Filter | null = FILTER_DEFAULT;
 
   constructor(props?: SearchParamsConstructorProps<Filter>) {
     this.page = props?.page ?? PAGE_DEFAULT;
@@ -79,21 +79,21 @@ class SearchParams<Filter> {
     return this._filter;
   }
 
-  private set page(value: number) {
+  protected set page(value: number) {
     if (Number.isNaN(value)) return;
     if (value <= 0) return;
     if (parseInt(value as any) !== value) return;
     this._page = value;
   }
 
-  private set pageLimit(value: number) {
+  protected set pageLimit(value: number) {
     if (Number.isNaN(value)) return;
     if (value <= 0) return;
     if (parseInt(value as any) !== value) return;
     this._pageLimit = value;
   }
 
-  private set sort(value: string | null) {
+  protected set sort(value: string | null) {
     if (value === null) return;
     if (value === undefined) return;
     if (value === "") return;
@@ -101,7 +101,7 @@ class SearchParams<Filter> {
     this._sort = value?.trim() ?? SORT_DEFAULT;
   }
 
-  private set sortDirection(rawValue: SortDirection) {
+  protected set sortDirection(rawValue: SortDirection) {
     const value = String(rawValue).toLowerCase();
     if (value !== "asc" && value !== "desc") return;
     this._sortDirection = value;

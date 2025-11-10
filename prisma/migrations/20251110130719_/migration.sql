@@ -14,19 +14,6 @@ CREATE TYPE "SharePermission" AS ENUM ('READ_ONLY');
 CREATE TYPE "Protocol" AS ENUM ('http', 'https');
 
 -- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "utc" INTEGER NOT NULL,
-    "password" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "TrafficSource" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -107,9 +94,10 @@ CREATE TABLE "HttpTraffic" (
 -- CreateTable
 CREATE TABLE "Request" (
     "id" TEXT NOT NULL,
-    "headers" JSONB NOT NULL,
-    "body" JSONB,
-    "queryParams" JSONB NOT NULL,
+    "headers" TEXT NOT NULL,
+    "bodyPreview" TEXT,
+    "bodyUrl" TEXT,
+    "queryParams" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Request_pkey" PRIMARY KEY ("id")
@@ -118,8 +106,9 @@ CREATE TABLE "Request" (
 -- CreateTable
 CREATE TABLE "Response" (
     "id" TEXT NOT NULL,
-    "headers" JSONB NOT NULL,
-    "body" JSONB,
+    "headers" TEXT NOT NULL,
+    "bodyPreview" TEXT,
+    "bodyUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Response_pkey" PRIMARY KEY ("id")
@@ -178,25 +167,31 @@ CREATE TABLE "ExceptionOccurrence" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE INDEX "TrafficSource_userId_createdAt_updatedAt_idx" ON "TrafficSource"("userId", "createdAt", "updatedAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Webhook_trafficSourceId_key" ON "Webhook"("trafficSourceId");
+CREATE INDEX "Webhook_type_level_createdAt_updatedAt_idx" ON "Webhook"("type", "level", "createdAt", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "TrafficSourceShare_sharedWithId_idx" ON "TrafficSourceShare"("sharedWithId");
-
--- CreateIndex
-CREATE INDEX "TrafficSourceShare_trafficSourceId_idx" ON "TrafficSourceShare"("trafficSourceId");
+CREATE INDEX "TrafficSourceShare_sharedWithId_trafficSourceId_createdAt_u_idx" ON "TrafficSourceShare"("sharedWithId", "trafficSourceId", "createdAt", "updatedAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TrafficSourceShare_ownerId_sharedWithId_trafficSourceId_key" ON "TrafficSourceShare"("ownerId", "sharedWithId", "trafficSourceId");
+
+-- CreateIndex
+CREATE INDEX "Domain_trafficSourceId_createdAt_idx" ON "Domain"("trafficSourceId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "Pathname_trafficSourceId_createdAt_idx" ON "Pathname"("trafficSourceId", "createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "HttpTraffic_requestId_key" ON "HttpTraffic"("requestId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "HttpTraffic_responseId_key" ON "HttpTraffic"("responseId");
+
+-- CreateIndex
+CREATE INDEX "HttpTraffic_status_method_level_trafficUserId_trafficSource_idx" ON "HttpTraffic"("status", "method", "level", "trafficUserId", "trafficSourceId", "elapsedTime", "domainId", "pathnameId", "createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "CoreLog_requestId_key" ON "CoreLog"("requestId");
@@ -208,16 +203,7 @@ CREATE UNIQUE INDEX "CoreLog_responseId_key" ON "CoreLog"("responseId");
 CREATE UNIQUE INDEX "Exception_hash_key" ON "Exception"("hash");
 
 -- AddForeignKey
-ALTER TABLE "TrafficSource" ADD CONSTRAINT "TrafficSource_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Webhook" ADD CONSTRAINT "Webhook_trafficSourceId_fkey" FOREIGN KEY ("trafficSourceId") REFERENCES "TrafficSource"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "TrafficSourceShare" ADD CONSTRAINT "TrafficSourceShare_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "TrafficSourceShare" ADD CONSTRAINT "TrafficSourceShare_sharedWithId_fkey" FOREIGN KEY ("sharedWithId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TrafficSourceShare" ADD CONSTRAINT "TrafficSourceShare_trafficSourceId_fkey" FOREIGN KEY ("trafficSourceId") REFERENCES "TrafficSource"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

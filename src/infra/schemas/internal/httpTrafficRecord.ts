@@ -38,18 +38,20 @@ const composeHttpTrafficRecordSchema = z.object({
 });
 
 const listHttpTrafficRecordsSchema = paginationSchema.extend({
+  id: z.string().uuid("Invalid http traffic record ID format").optional(),
+  method: z.enum(["get", "post", "put", "delete", "patch"]).optional(),
+  level: z.enum(["info", "warning", "fatal"]).optional(),
+  protocol: z.enum(["http", "https"]).optional(),
   trafficSourceId: z
     .string()
     .min(1, "Traffic source id is required")
     .uuid("Invalid traffic source id format"),
-  method: z.enum(["get", "post", "put", "delete", "patch"]).optional(),
-  level: z.enum(["info", "warning", "DEBUG"]).optional(),
   status: z
     .string()
     .optional()
     .transform((val) => (val ? parseInt(val, 10) : undefined))
     .pipe(z.number().int("Status must be an integer").optional()),
-  protocol: z.enum(["http", "https"]).optional(),
+  sort: z.enum(["elapsedTime", "status", "method", "level"]).optional(),
 });
 
 export { composeHttpTrafficRecordSchema, listHttpTrafficRecordsSchema };

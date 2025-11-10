@@ -8,29 +8,18 @@ class EnvError extends Error {
 }
 
 const environmentVariablesSchema = z.object({
-  // JWT KEY
-  JWT_KEY: z.string().min(1),
-
-  // DATABASE URL
+  // Database configurations
   DATABASE_URL: z.string().url(),
   DIRECT_URL: z.string().url(),
 
-  // MICRO SERVICES
+  // Micro services
   MICRO_AUTH_URL: z.string().url(),
+  MICRO_PANEL_URL: z.string().url(),
 
-  // REDIS URL
-  REDIS_HOST: z.string().min(1),
-  REDIS_PASSWORD: z.string().min(1),
-  REDIS_PORT: z.string().min(1).transform(Number),
-
-  // PORT
-  PORT: z.string().min(4).regex(/^\d+$/).transform(Number),
-
-  // discord BOT TOKEN
+  // Configurations
+  JWT_KEY: z.string().min(1),
   DISCORD_BOT_TOKEN: z.string().min(1),
-
-  // Arkyn Panel URL
-  ARKYN_PANEL_URL: z.string().url(),
+  PORT: z.string().min(4).regex(/^\d+$/).transform(Number),
 });
 
 function formatErrorMessage(error: z.ZodError) {
