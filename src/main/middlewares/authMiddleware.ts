@@ -16,7 +16,7 @@ class AuthMiddleware {
     const apiResponse = await microAuth.post(`/users/validate`, { token });
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    return { userId };
+    return { userId, token };
   }
 }
 
