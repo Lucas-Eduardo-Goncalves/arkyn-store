@@ -25,8 +25,8 @@ class CreatePathnameUseCase {
       await this.domainRepository.findById(domainId),
       await this.pathnameRepository.findUnique(
         value,
-        trafficSourceId,
-        domainId
+        domainId,
+        trafficSourceId
       ),
     ]);
 
