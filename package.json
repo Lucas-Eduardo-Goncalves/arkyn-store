@@ -17,8 +17,7 @@
     "@arkyn/server": "^3.0.1-beta.88",
     "@arkyn/shared": "^3.0.1-beta.88",
     "@arkyn/templates": "^3.0.1-beta.88",
-    "@prisma/adapter-pg": "^7.0.0",
-    "@prisma/client": "^6.19.0",
+    "@prisma/client": "5.22.0",
     "argon2": "^0.43.1",
     "discord.js": "^14.25.1",
     "dotenv": "^17.2.3",
@@ -28,7 +27,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "prisma": "^6.19.0",
+    "prisma": "5.22.0",
     "typescript": "^5.9.3"
   }
 }
