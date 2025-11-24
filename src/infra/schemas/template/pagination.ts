@@ -10,12 +10,12 @@ const paginationSchema = z.strictObject({
     .string()
     .optional()
     .transform((val) => (val ? Number(val) : PAGE_DEFAULT))
-    .pipe(z.number().int().min(1).optional()),
+    .pipe(z.number().int().min(1)),
   pageLimit: z
     .string()
     .optional()
     .transform((val) => (val ? Number(val) : PAGE_LIMIT_DEFAULT))
-    .pipe(z.number().int().min(1).optional()),
+    .pipe(z.number().int().min(1)),
   sortDirection: z.enum(["asc", "desc"]).optional(),
 });
 

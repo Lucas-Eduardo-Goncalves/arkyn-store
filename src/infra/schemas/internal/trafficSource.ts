@@ -7,11 +7,11 @@ const createTrafficSourceSchema = z.object({
     .string()
     .min(1, "Traffic domain is required")
     .url("Invalid URL format"),
-  userId: z.string().uuid("Invalid user id format"),
+  userId: z.uuid("Invalid user id format"),
 });
 
 const updateTrafficSourceSchema = z.object({
-  trafficSourceId: z.string().uuid("Invalid id format"),
+  trafficSourceId: z.uuid("Invalid id format"),
   trafficDomain: z
     .string()
     .min(1, "Traffic domain is required")
@@ -21,17 +21,22 @@ const updateTrafficSourceSchema = z.object({
 });
 
 const deleteTrafficSourceSchema = z.object({
-  trafficSourceId: z.string().uuid("Invalid id format"),
+  trafficSourceId: z.uuid("Invalid id format"),
+});
+
+const listTrafficSourceByIdSchema = z.object({
+  trafficSourceId: z.uuid("Invalid user id format"),
 });
 
 const listTrafficSourcesSchema = paginationSchema.extend({
-  userId: z.string().uuid("Invalid user id format"),
+  userId: z.uuid("Invalid user id format"),
   sort: z.enum(["createdAt", "updatedAt", "name"]).optional(),
 });
 
 export {
   createTrafficSourceSchema,
   deleteTrafficSourceSchema,
+  listTrafficSourceByIdSchema,
   listTrafficSourcesSchema,
   updateTrafficSourceSchema,
 };
