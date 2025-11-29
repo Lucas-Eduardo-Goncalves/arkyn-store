@@ -17,21 +17,15 @@ const createCorePathnameSchema = z.object({
       },
       { message: "Invalid pathname format" }
     ),
-  trafficSourceId: z
-    .string()
-    .min(1, "Traffic source id is required")
-    .uuid("Invalid traffic source id format"),
+  trafficSourceId: z.uuidv7("Invalid traffic source id format"),
 });
 
 const deleteCorePathnameSchema = z.object({
-  corePathnameId: z.string().uuid("Invalid id format"),
+  corePathnameId: z.uuidv7("Invalid id format"),
 });
 
 const listCorePathnamesSchema = paginationSchema.extend({
-  trafficSourceId: z
-    .string()
-    .min(1, "Traffic source id is required")
-    .uuid("Invalid traffic source id format"),
+  trafficSourceId: z.uuidv7("Invalid traffic source id format"),
 });
 
 export {

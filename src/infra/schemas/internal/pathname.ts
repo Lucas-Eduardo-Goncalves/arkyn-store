@@ -28,18 +28,12 @@ const createPathnameSchema = z.object({
 });
 
 const deletePathnameSchema = z.object({
-  pathnameId: z.string().uuid("Invalid id format"),
+  pathnameId: z.uuidv7("Invalid id format"),
 });
 
 const listPathnamesSchema = paginationSchema.extend({
-  trafficSourceId: z
-    .string()
-    .min(1, "Traffic source id is required")
-    .uuid("Invalid traffic source id format"),
-  domainId: z
-    .string()
-    .min(1, "Domain id is required")
-    .uuid("Invalid domain id format"),
+  trafficSourceId: z.uuidv7("Invalid traffic source id format"),
+  domainId: z.uuidv7("Invalid domain id format"),
   sort: z.enum(["value", "createdAt"]).optional(),
 });
 

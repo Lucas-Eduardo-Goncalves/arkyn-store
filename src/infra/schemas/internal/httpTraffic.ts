@@ -2,29 +2,27 @@ import z from "zod";
 import { paginationSchema } from "../template/pagination";
 
 const createHttpTrafficSchema = z.object({
-  trafficSourceId: z
-    .string()
-    .min(1, "Traffic source id is required")
-    .uuid("Invalid traffic source id format"),
-  status: z.number().int("Status must be an integer"),
+  trafficSourceId: z.uuidv7(),
   method: z.enum(["get", "post", "put", "delete", "patch"]),
-  trafficUserId: z.string().uuid("Invalid traffic user id format").nullable(),
-  domainId: z.string().uuid("Invalid domain id format"),
+  trafficUserId: z.uuidv7("Invalid traffic user id format").nullable(),
+  domainId: z.uuidv7("Invalid domain id format"),
   elapsedTime: z.number().min(0, "Elapsed time must be a non-negative number"),
-  pathnameId: z.string().uuid("Invalid pathname id format"),
-  requestId: z.string().uuid("Invalid request id format"),
-  responseId: z.string().uuid("Invalid response id format"),
+  pathnameId: z.uuidv7("Invalid pathname id format"),
+  requestId: z.uuidv7("Invalid request id format"),
+  responseId: z.uuidv7("Invalid response id format"),
+  status: z
+    .number()
+    .int("Status must be an integer")
+    .min(100, "Status must be at least 100")
+    .max(599, "Status must be at most 599"),
 });
 
 const deleteHttpTrafficSchema = z.object({
-  httpTrafficId: z.string().uuid("Invalid http traffic ID format"),
+  httpTrafficId: z.uuidv7("Invalid http traffic ID format"),
 });
 
 const listHttpTrafficsSchema = paginationSchema.extend({
-  trafficSourceId: z
-    .string()
-    .min(1, "Traffic source id is required")
-    .uuid("Invalid traffic source id format"),
+  trafficSourceId: z.uuidv7("Invalid traffic source id format"),
   status: z
     .string()
     .optional()

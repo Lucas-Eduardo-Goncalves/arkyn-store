@@ -7,7 +7,7 @@ const createRequestSchema = z.object({
 });
 
 const deleteRequestSchema = z.object({
-  requestId: z.string().uuid("Invalid id format"),
+  requestId: z.uuidv7("Invalid id format"),
 });
 
 export { createRequestSchema, deleteRequestSchema };

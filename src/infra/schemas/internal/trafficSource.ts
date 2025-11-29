@@ -3,20 +3,13 @@ import { paginationSchema } from "../template/pagination";
 
 const createTrafficSourceSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  trafficDomain: z
-    .string()
-    .min(1, "Traffic domain is required")
-    .url("Invalid URL format"),
+  trafficDomain: z.url("Invalid URL format"),
   userId: z.uuid("Invalid user id format"),
 });
 
 const updateTrafficSourceSchema = z.object({
   trafficSourceId: z.uuid("Invalid id format"),
-  trafficDomain: z
-    .string()
-    .min(1, "Traffic domain is required")
-    .url("Invalid URL format")
-    .optional(),
+  trafficDomain: z.url("Invalid URL format").optional(),
   name: z.string().min(1, "Name is required").optional(),
 });
 

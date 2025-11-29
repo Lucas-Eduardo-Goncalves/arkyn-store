@@ -6,7 +6,7 @@ const createResponseSchema = z.object({
 });
 
 const deleteResponseSchema = z.object({
-  responseId: z.string().uuid("Invalid id format"),
+  responseId: z.uuidv7("Invalid id format"),
 });
 
 export { createResponseSchema, deleteResponseSchema };
