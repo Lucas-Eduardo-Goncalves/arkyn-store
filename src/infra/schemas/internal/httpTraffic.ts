@@ -31,7 +31,9 @@ const listHttpTrafficsSchema = paginationSchema.extend({
     .transform((val) => (val ? parseInt(val, 10) : undefined))
     .pipe(z.number().int("Status must be an integer").optional()),
   method: z.enum(["get", "post", "put", "delete", "patch"]).optional(),
-  sort: z.enum(["elapsedTime", "status", "method", "level"]).optional(),
+  sort: z
+    .enum(["elapsedTime", "status", "method", "level", "createdAt"])
+    .optional(),
 });
 
 export {
