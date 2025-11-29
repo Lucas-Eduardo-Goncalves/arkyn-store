@@ -35,6 +35,19 @@ class PrismaHttpTrafficRecordDAL implements HttpTrafficRecordDAL {
       },
     });
   }
+
+  async findById(id: string): Promise<HttpTrafficRecord | null> {
+    const httpTraffic = await databaseConnection.httpTraffic.findUnique({
+      where: { id },
+      include: { request: true, response: true, domain: true, pathname: true },
+    });
+
+    if (!httpTraffic) {
+      return null;
+    }
+
+    return HttpTrafficRecordMapper.toView(httpTraffic);
+  }
 }
 
 export { PrismaHttpTrafficRecordDAL };

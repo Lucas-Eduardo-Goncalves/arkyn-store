@@ -1,24 +1,21 @@
-import { ListHttpTrafficRecordsUseCase } from "../../../app/useCases/httpTrafficRecord/listHttpTrafficRecordsUseCase";
-import { ListHttpTrafficRecordsController } from "../../../infra/controllers/httpTrafficRecord/listHttpTrafficRecordsController";
+import { ListHttpTrafficRecordUseCase } from "../../../app/useCases/httpTrafficRecord/listHttpTrafficRecordUseCase";
+import { ListHttpTrafficRecordController } from "../../../infra/controllers/httpTrafficRecord/listHttpTrafficRecordController";
 import { PrismaHttpTrafficRecordDAL } from "../../../infra/dal/httpTrafficRecord";
-import { PrismaTrafficSourceRepository } from "../../../infra/repositories/trafficSource";
 
 const prismaHttpTrafficRecordDAL = new PrismaHttpTrafficRecordDAL();
-const prismaTrafficSourceRepository = new PrismaTrafficSourceRepository();
 
-const listHttpTrafficRecordsUseCase = new ListHttpTrafficRecordsUseCase(
-  prismaHttpTrafficRecordDAL,
-  prismaTrafficSourceRepository
+const listHttpTrafficRecordUseCase = new ListHttpTrafficRecordUseCase(
+  prismaHttpTrafficRecordDAL
 );
 
-const listHttpTrafficRecordsController = new ListHttpTrafficRecordsController(
-  listHttpTrafficRecordsUseCase
+const listHttpTrafficRecordController = new ListHttpTrafficRecordController(
+  listHttpTrafficRecordUseCase
 );
 
-const listHttpTrafficRecords = {
-  handle: listHttpTrafficRecordsController.handle.bind(
-    listHttpTrafficRecordsController
+const listHttpTrafficRecord = {
+  handle: listHttpTrafficRecordController.handle.bind(
+    listHttpTrafficRecordController
   ),
 };
 
-export { listHttpTrafficRecords };
+export { listHttpTrafficRecord };

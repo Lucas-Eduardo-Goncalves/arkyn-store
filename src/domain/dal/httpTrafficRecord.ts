@@ -6,6 +6,7 @@ type HttpTrafficRecordDAL = {
   findAll: (
     searchParams: HttpTrafficRecordSearchParams
   ) => Promise<SearchResult<HttpTrafficRecord>>;
+  findById: (id: string) => Promise<HttpTrafficRecord | null>;
 };
 
 export type { HttpTrafficRecordDAL };
