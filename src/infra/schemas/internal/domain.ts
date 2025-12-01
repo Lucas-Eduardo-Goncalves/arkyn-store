@@ -12,7 +12,7 @@ const deleteDomainSchema = z.object({
 });
 
 const listDomainsSchema = paginationSchema.extend({
-  value: z.url().optional(),
+  value: z.string().optional(),
   protocol: z.enum(["http", "https"]).optional(),
   trafficSourceId: z.uuidv7("Invalid traffic source id format"),
   sort: z.enum(["createdAt", "value", "protocol"]).optional(),
