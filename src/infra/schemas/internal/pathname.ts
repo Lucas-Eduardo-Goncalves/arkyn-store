@@ -17,14 +17,8 @@ const createPathnameSchema = z.object({
       },
       { message: "Invalid pathname format" }
     ),
-  trafficSourceId: z
-    .string()
-    .min(1, "Traffic source id is required")
-    .uuid("Invalid traffic source id format"),
-  domainId: z
-    .string()
-    .min(1, "Pathname id is required")
-    .uuid("Invalid domain id format"),
+  trafficSourceId: z.uuidv7("Traffic source id is required"),
+  domainId: z.uuidv7("Domain id is required"),
 });
 
 const deletePathnameSchema = z.object({
@@ -34,6 +28,7 @@ const deletePathnameSchema = z.object({
 const listPathnamesSchema = paginationSchema.extend({
   trafficSourceId: z.uuidv7("Invalid traffic source id format"),
   domainId: z.uuidv7("Invalid domain id format"),
+  value: z.string().optional(),
   sort: z.enum(["value", "createdAt"]).optional(),
 });
 
