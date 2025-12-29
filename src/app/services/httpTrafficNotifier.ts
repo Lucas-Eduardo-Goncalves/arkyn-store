@@ -5,6 +5,7 @@ import { TrafficSource } from "../../domain/entities/trafficSource";
 import { WebhookRepository } from "../../domain/repositories/webhook";
 import { WebhookService } from "../../infra/service/webhookService";
 import { environmentVariables } from "../../main/config/environmentVariables";
+import { convertMsToTime } from "./convertMsToTime";
 
 class HttpTrafficNotifier {
   constructor(private webhookRepository: WebhookRepository) {}
@@ -27,7 +28,9 @@ class HttpTrafficNotifier {
     const webhookService = new WebhookService(webhook);
 
     const url = `URL: ${domain.value}${pathname.value}`;
-    const elapsedTime = `Elapsed Time: ${httpTraffic.elapsedTime}ms`;
+    const elapsedTime = `Elapsed Time: ${convertMsToTime(
+      httpTraffic.elapsedTime
+    )}`;
     const panelUrl = `Panel URL: ${environmentVariables.MICRO_PANEL_URL}/traffic-sources/${trafficSource.id}/http-traffics?httpTrafficId=${httpTraffic.id}`;
 
     await webhookService.send({
