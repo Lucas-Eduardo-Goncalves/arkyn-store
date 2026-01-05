@@ -52,13 +52,13 @@ class Response {
     });
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
       id: this.id,
       headers: this.headers,
       bodyPreview: this.bodyPreview,
       bodyUrl: this.bodyUrl,
-      createdAt: FormatDateAdapter.format(this.createdAt),
+      createdAt: FormatDateAdapter.format(this.createdAt, userUTC),
     };
   }
 }

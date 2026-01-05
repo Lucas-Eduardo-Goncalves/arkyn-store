@@ -46,28 +46,28 @@ class HttpTrafficRecord {
     });
   }
 
-  makeRequest() {
+  makeRequest(userUTC: number) {
     if (!this._request) return null;
     return {
       headers: this._request.headers,
       bodyPreview: this._request.bodyPreview,
       bodyUrl: this._request.bodyUrl,
       queryParams: this._request.queryParams,
-      createdAt: FormatDateAdapter.format(this._request.createdAt),
+      createdAt: FormatDateAdapter.format(this._request.createdAt, userUTC),
     };
   }
 
-  makeResponse() {
+  makeResponse(userUTC: number) {
     if (!this._response) return null;
     return {
       headers: this._response.headers,
       bodyPreview: this._response.bodyPreview,
       bodyUrl: this._response.bodyUrl,
-      createdAt: FormatDateAdapter.format(this._response.createdAt),
+      createdAt: FormatDateAdapter.format(this._response.createdAt, userUTC),
     };
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
       id: this._httpTraffic.id,
       status: this._httpTraffic.status,
@@ -79,9 +79,9 @@ class HttpTrafficRecord {
       trafficSourceId: this._httpTraffic.trafficSourceId,
       domain: this._domain.value,
       pathname: this._pathname.value,
-      request: this.makeRequest(),
-      response: this.makeResponse(),
-      createdAt: FormatDateAdapter.format(this._httpTraffic.createdAt),
+      request: this.makeRequest(userUTC),
+      response: this.makeResponse(userUTC),
+      createdAt: FormatDateAdapter.format(this._httpTraffic.createdAt, userUTC),
     };
   }
 }

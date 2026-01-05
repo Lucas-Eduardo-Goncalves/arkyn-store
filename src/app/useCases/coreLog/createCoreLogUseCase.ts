@@ -1,11 +1,12 @@
-import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
-import { HttpMethod } from "../../../main/types/HttpMethod";
 import { CoreLog } from "../../../domain/entities/coreLog";
+import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { CoreLogRepository } from "../../../domain/repositories/coreLog";
 import { CorePathnameRepository } from "../../../domain/repositories/corePathname";
 import { RequestRepository } from "../../../domain/repositories/request";
 import { ResponseRepository } from "../../../domain/repositories/response";
 import { TrafficSourceRepository } from "../../../domain/repositories/trafficSource";
+import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
+import { HttpMethod } from "../../../main/types/HttpMethod";
 
 type InputProps = {
   status: number;
@@ -22,12 +23,13 @@ class CreateCoreLogUseCase {
   constructor(
     private coreLogRepository: CoreLogRepository,
     private trafficSourceRepository: TrafficSourceRepository,
-    private corePathnameRespository: CorePathnameRepository,
+    private corePathnameRepository: CorePathnameRepository,
     private requestRepository: RequestRepository,
-    private responseRepository: ResponseRepository
+    private responseRepository: ResponseRepository,
+    private userGateway: UserGatewayDTO
   ) {}
 
-  async execute(input: InputProps) {
+  async execute(input: InputProps, token: string) {
     const {
       trafficSourceId,
       corePathnameId,
@@ -44,11 +46,13 @@ class CreateCoreLogUseCase {
       existsCorePathname,
       existsRequest,
       existsResponse,
+      user,
     ] = await Promise.all([
       await this.trafficSourceRepository.findById(trafficSourceId),
-      await this.corePathnameRespository.findById(corePathnameId),
+      await this.corePathnameRepository.findById(corePathnameId),
       await this.requestRepository.findById(requestId),
       await this.responseRepository.findById(responseId),
+      await this.userGateway.findUnique(token),
     ]);
 
     if (!existsTrafficSource) {
@@ -80,7 +84,7 @@ class CreateCoreLogUseCase {
 
     await this.coreLogRepository.createCoreLog(coreLog);
 
-    return coreLog.toJson();
+    return coreLog.toJson(user.utc);
   }
 }
 

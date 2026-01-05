@@ -1,8 +1,8 @@
 import { CreateCorePathnameUseCase } from "../../../app/useCases/corePathname/createCorePathnameUseCase";
+import { AuthMiddleware } from "../../../main/middlewares/authMiddleware";
 import { RouteDTO } from "../../../main/types/RouteDTO";
 import { ErrorHandlerAdapter } from "../../adapters/errorHandlerAdapter";
 import { SchemaValidatorAdapter } from "../../adapters/schemaValidatorAdapter";
-import { AuthMiddleware } from "../../../main/middlewares/authMiddleware";
 import { createCorePathnameSchema } from "../../schemas/internal/corePathname";
 
 class CreateCorePathnameController {
@@ -10,7 +10,7 @@ class CreateCorePathnameController {
 
   async handle(route: RouteDTO) {
     try {
-      await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const trafficSourceId = route.request.params?.trafficSourceId;
       const body = route.request.body;
@@ -20,9 +20,12 @@ class CreateCorePathnameController {
       );
 
       const data = schemaValidator.validate({ ...body, trafficSourceId });
-      const trafficsource = await this.createCorePathnameUseCase.execute(data);
+      const trafficSource = await this.createCorePathnameUseCase.execute(
+        data,
+        token
+      );
 
-      return route.response.json(trafficsource, 201);
+      return route.response.json(trafficSource, 201);
     } catch (error) {
       return ErrorHandlerAdapter.handle(error);
     }

@@ -1,5 +1,5 @@
-import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
 import { CorePathnameRepository } from "../../../domain/repositories/corePathname";
+import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
 
 class DeleteCorePathnameUseCase {
   constructor(private corePathnameRepository: CorePathnameRepository) {}

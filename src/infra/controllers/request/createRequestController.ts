@@ -10,7 +10,7 @@ class CreateRequestController {
 
   async handle(route: RouteDTO) {
     try {
-      await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const httpTrafficId = route.request.params?.httpTrafficId;
       const body = route.request.body;
@@ -18,7 +18,7 @@ class CreateRequestController {
       const schemaValidator = new SchemaValidatorAdapter(createRequestSchema);
       const data = schemaValidator.validate({ ...body, httpTrafficId });
 
-      const request = await this.createRequestUseCase.execute(data);
+      const request = await this.createRequestUseCase.execute(data, token);
       return route.response.json(request, 201);
     } catch (error) {
       return ErrorHandlerAdapter.handle(error);

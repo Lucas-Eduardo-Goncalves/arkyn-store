@@ -10,7 +10,7 @@ class DeleteWebhookController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const body = route.request.body;
       const params = route.request.params;
@@ -18,7 +18,7 @@ class DeleteWebhookController {
       const schemaValidator = new SchemaValidatorAdapter(deleteWebhookSchema);
       const data = schemaValidator.validate({ ...body, ...params });
 
-      const webhook = await this.deleteWebhookUseCase.execute(data, userId);
+      const webhook = await this.deleteWebhookUseCase.execute(data, token);
 
       return route.response.json(webhook, 201);
     } catch (error) {

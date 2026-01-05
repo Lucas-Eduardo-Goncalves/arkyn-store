@@ -4,7 +4,6 @@ import { paginationSchema } from "../template/pagination";
 const createTrafficSourceSchema = z.object({
   name: z.string().min(1, "Name is required"),
   trafficDomain: z.url("Invalid URL format"),
-  userId: z.uuid("Invalid user id format"),
 });
 
 const updateTrafficSourceSchema = z.object({
@@ -22,7 +21,6 @@ const listTrafficSourceByIdSchema = z.object({
 });
 
 const listTrafficSourcesSchema = paginationSchema.extend({
-  userId: z.uuid("Invalid user id format"),
   sort: z.enum(["createdAt", "updatedAt", "name"]).optional(),
 });
 

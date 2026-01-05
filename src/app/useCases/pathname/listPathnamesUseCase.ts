@@ -1,3 +1,4 @@
+import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { DomainRepository } from "../../../domain/repositories/domain";
 import { PathnameRepository } from "../../../domain/repositories/pathname";
 import { TrafficSourceRepository } from "../../../domain/repositories/trafficSource";
@@ -20,22 +21,25 @@ class ListPathnamesUseCase {
   constructor(
     private pathnameRepository: PathnameRepository,
     private trafficSourceRepository: TrafficSourceRepository,
-    private domainRepository: DomainRepository
+    private domainRepository: DomainRepository,
+    private userGateway: UserGatewayDTO
   ) {}
 
-  async execute(input: InputProps, userId: string) {
+  async execute(input: InputProps, token: string) {
     const searchParams = new PathnameSearchParams(input);
 
-    const [trafficSource, domain] = await Promise.all([
+    const [trafficSource, domain, pathnames, user] = await Promise.all([
       this.trafficSourceRepository.findById(input.filter.trafficSourceId),
       this.domainRepository.findById(input.filter.domainId),
+      this.pathnameRepository.findAll(searchParams),
+      this.userGateway.findUnique(token),
     ]);
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
     }
 
-    if (trafficSource.userId !== userId) {
+    if (trafficSource.userId !== user.id) {
       throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
@@ -43,8 +47,7 @@ class ListPathnamesUseCase {
       throw HttpAdapter.notFound("Domain not found");
     }
 
-    const pathnames = await this.pathnameRepository.findAll(searchParams);
-    return pathnames.toJson();
+    return pathnames.toJson(user.utc);
   }
 }
 

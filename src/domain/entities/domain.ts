@@ -52,13 +52,13 @@ class Domain {
     });
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
       id: this.id,
       value: this.value,
       protocol: this.protocol,
       trafficSourceId: this.trafficSourceId,
-      createdAt: FormatDateAdapter.format(this.createdAt),
+      createdAt: FormatDateAdapter.format(this.createdAt, userUTC),
     };
   }
 }

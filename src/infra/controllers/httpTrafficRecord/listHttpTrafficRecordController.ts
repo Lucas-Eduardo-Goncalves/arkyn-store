@@ -10,14 +10,16 @@ class ListHttpTrafficRecordController {
 
   async handle(route: RouteDTO) {
     try {
-      await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const httpTrafficRecordId = route.request.params?.httpTrafficRecordId;
+
       if (!httpTrafficRecordId)
         throw new Error("httpTrafficRecordId is required");
 
       const httpTrafficRecord = await this.listHttpTrafficRecordUseCase.execute(
-        httpTrafficRecordId
+        httpTrafficRecordId,
+        token
       );
 
       return route.response.json(httpTrafficRecord);

@@ -102,7 +102,7 @@ class HttpTraffic {
     });
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
       id: this.id,
       status: this.status,
@@ -115,7 +115,7 @@ class HttpTraffic {
       pathnameId: this.pathnameId,
       requestId: this.requestId,
       responseId: this.responseId,
-      createdAt: FormatDateAdapter.format(this.createdAt),
+      createdAt: FormatDateAdapter.format(this.createdAt, userUTC),
     };
   }
 }

@@ -19,11 +19,11 @@ class DeleteCorePathnameController {
 
       const validatedBody = schemaValidator.validate({ corePathnameId });
 
-      const trafficsource = await this.deleteCorePathnameUseCase.execute(
+      const trafficSource = await this.deleteCorePathnameUseCase.execute(
         validatedBody.corePathnameId
       );
 
-      return route.response.json(trafficsource);
+      return route.response.json(trafficSource);
     } catch (error) {
       return ErrorHandlerAdapter.handle(error);
     }

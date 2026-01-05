@@ -1,6 +1,7 @@
 import { HttpTrafficNotifier } from "../../../app/services/httpTrafficNotifier";
 import { CreateHttpTrafficUseCase } from "../../../app/useCases/httpTraffic/createHttpTrafficUseCase";
 import { CreateHttpTrafficController } from "../../../infra/controllers/httpTraffic/createHttpTrafficController";
+import { UserGateway } from "../../../infra/gateways/user";
 import { PrismaDomainRepository } from "../../../infra/repositories/domain";
 import { PrismaHttpTrafficRepository } from "../../../infra/repositories/httpTraffic";
 import { PrismaPathnameRepository } from "../../../infra/repositories/pathname";
@@ -16,6 +17,7 @@ const prismaPathnameSourceRepository = new PrismaPathnameRepository();
 const prismaRequestRepository = new PrismaRequestRepository();
 const prismaResponseRepository = new PrismaResponseRepository();
 const prismaWebhookRepository = new PrismaWebhookRepository();
+const userGateway = new UserGateway();
 
 const httpTrafficNotifier = new HttpTrafficNotifier(prismaWebhookRepository);
 
@@ -26,7 +28,8 @@ const createHttpTrafficUseCase = new CreateHttpTrafficUseCase(
   prismaPathnameSourceRepository,
   prismaRequestRepository,
   prismaResponseRepository,
-  httpTrafficNotifier
+  httpTrafficNotifier,
+  userGateway
 );
 
 const createHttpTrafficController = new CreateHttpTrafficController(

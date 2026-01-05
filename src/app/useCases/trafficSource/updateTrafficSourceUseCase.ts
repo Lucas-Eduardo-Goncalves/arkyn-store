@@ -1,3 +1,4 @@
+import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { TrafficSourceRepository } from "../../../domain/repositories/trafficSource";
 import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
 
@@ -8,20 +9,24 @@ type InputProps = {
 };
 
 class UpdateTrafficSourceUseCase {
-  constructor(private trafficSourceRepository: TrafficSourceRepository) {}
+  constructor(
+    private trafficSourceRepository: TrafficSourceRepository,
+    private userGateway: UserGatewayDTO
+  ) {}
 
-  async execute(input: InputProps, userId: string) {
+  async execute(input: InputProps, token: string) {
     const { trafficSourceId, name, trafficDomain } = input;
 
-    const trafficSource = await this.trafficSourceRepository.findById(
-      trafficSourceId
-    );
+    const [trafficSource, user] = await Promise.all([
+      this.trafficSourceRepository.findById(trafficSourceId),
+      this.userGateway.findUnique(token),
+    ]);
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
     }
 
-    if (trafficSource.userId !== userId) {
+    if (trafficSource.userId !== user.id) {
       throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
@@ -29,7 +34,7 @@ class UpdateTrafficSourceUseCase {
 
     await this.trafficSourceRepository.updateTrafficSource(trafficSource);
 
-    return trafficSource.toJson();
+    return trafficSource.toJson(user.utc);
   }
 }
 

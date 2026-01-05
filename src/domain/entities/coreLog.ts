@@ -97,7 +97,7 @@ class CoreLog implements Entity {
     });
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
       id: this.id,
       status: this.status,
@@ -108,7 +108,7 @@ class CoreLog implements Entity {
       corePathnameId: this.corePathnameId,
       requestId: this.requestId,
       responseId: this.responseId,
-      createdAt: FormatDateAdapter.format(this.createdAt),
+      createdAt: FormatDateAdapter.format(this.createdAt, userUTC),
     };
   }
 }

@@ -1,6 +1,6 @@
-import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
 import { HttpTrafficRepository } from "../../../domain/repositories/httpTraffic";
 import { TrafficSourceRepository } from "../../../domain/repositories/trafficSource";
+import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
 
 class DeleteHttpTrafficUseCase {
   constructor(

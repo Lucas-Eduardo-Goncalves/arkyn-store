@@ -10,12 +10,12 @@ class ListWebhooksController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const schemaValidator = new SchemaValidatorAdapter(listWebhookSchema);
       const data = schemaValidator.validate({ ...route.request.params });
 
-      const webhook = await this.listWebhooksUseCase.execute(data, userId);
+      const webhook = await this.listWebhooksUseCase.execute(data, token);
 
       return route.response.json(webhook, 201);
     } catch (error) {

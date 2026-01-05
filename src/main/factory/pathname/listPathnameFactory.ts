@@ -3,15 +3,18 @@ import { ListPathnamesUseCase } from "../../../app/useCases/pathname/listPathnam
 import { ListPathnamesController } from "../../../infra/controllers/pathname/listPathnamesController";
 import { PrismaTrafficSourceRepository } from "../../../infra/repositories/trafficSource";
 import { PrismaDomainRepository } from "../../../infra/repositories/domain";
+import { UserGateway } from "../../../infra/gateways/user";
 
 const prismaPathnameRepository = new PrismaPathnameRepository();
 const prismaTrafficSourceRepository = new PrismaTrafficSourceRepository();
 const prismaDomainRepository = new PrismaDomainRepository();
+const userGateway = new UserGateway();
 
 const listPathnamesUseCase = new ListPathnamesUseCase(
   prismaPathnameRepository,
   prismaTrafficSourceRepository,
-  prismaDomainRepository
+  prismaDomainRepository,
+  userGateway
 );
 
 const listPathnamesController = new ListPathnamesController(

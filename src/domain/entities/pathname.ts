@@ -52,13 +52,13 @@ class Pathname {
     });
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
       id: this.id,
       value: this.value,
       domainId: this.domainId,
       trafficSourceId: this.trafficSourceId,
-      createdAt: FormatDateAdapter.format(this.createdAt),
+      createdAt: FormatDateAdapter.format(this.createdAt, userUTC),
     };
   }
 }

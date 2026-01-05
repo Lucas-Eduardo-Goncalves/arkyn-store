@@ -1,4 +1,5 @@
 import { Response } from "../../../domain/entities/response";
+import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { ResponseRepository } from "../../../domain/repositories/response";
 import { FileStorageService } from "../../../infra/service/fileStorageService";
 
@@ -10,24 +11,22 @@ type InputProps = {
 class CreateResponseUseCase {
   constructor(
     private responseRepository: ResponseRepository,
-    private fileStorageService: FileStorageService
+    private fileStorageService: FileStorageService,
+    private userGateway: UserGatewayDTO
   ) {}
 
-  getBodyPreview(body: string | null) {
-    return body;
-    // if (!body) return null;
-    // return body.slice(0, 200);
-  }
-
-  async execute(input: InputProps) {
+  async execute(input: InputProps, token: string) {
     const { body, headers } = input;
 
-    const bodyUrl = await this.fileStorageService.insert(body);
-    const bodyPreview = this.getBodyPreview(body);
+    const [bodyUrl, user] = await Promise.all([
+      this.fileStorageService.insert(body),
+      this.userGateway.findUnique(token),
+    ]);
 
-    const response = Response.create({ headers, bodyUrl, bodyPreview });
+    const response = Response.create({ headers, bodyUrl, bodyPreview: body });
+
     await this.responseRepository.createResponse(response);
-    return response.toJson();
+    return response.toJson(user.utc);
   }
 }
 

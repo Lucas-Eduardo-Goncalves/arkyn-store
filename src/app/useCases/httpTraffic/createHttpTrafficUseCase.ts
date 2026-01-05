@@ -1,4 +1,5 @@
 import { HttpTraffic } from "../../../domain/entities/httpTraffic";
+import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { DomainRepository } from "../../../domain/repositories/domain";
 import { HttpTrafficRepository } from "../../../domain/repositories/httpTraffic";
 import { PathnameRepository } from "../../../domain/repositories/pathname";
@@ -29,10 +30,11 @@ class CreateHttpTrafficUseCase {
     private pathnameRepository: PathnameRepository,
     private requestRepository: RequestRepository,
     private responseRepository: ResponseRepository,
-    private httpTrafficNotifier: HttpTrafficNotifier
+    private httpTrafficNotifier: HttpTrafficNotifier,
+    private userGateway: UserGatewayDTO
   ) {}
 
-  async execute(input: InputProps, userId: string) {
+  async execute(input: InputProps, token: string) {
     const {
       trafficSourceId,
       status,
@@ -45,20 +47,21 @@ class CreateHttpTrafficUseCase {
       responseId,
     } = input;
 
-    const [trafficSource, domain, pathname, request, response] =
+    const [trafficSource, domain, pathname, request, response, user] =
       await Promise.all([
         this.trafficSourceRepository.findById(trafficSourceId),
         this.domainRepository.findById(domainId),
         this.pathnameRepository.findById(pathnameId),
         this.requestRepository.findById(requestId),
         this.responseRepository.findById(responseId),
+        this.userGateway.findUnique(token),
       ]);
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
     }
 
-    if (trafficSource.userId !== userId) {
+    if (trafficSource.userId !== user.id) {
       throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
@@ -93,7 +96,7 @@ class CreateHttpTrafficUseCase {
     await this.httpTrafficRepository.createHttpTraffic(httpTraffic);
     this.httpTrafficNotifier.send(httpTraffic, domain, trafficSource, pathname);
 
-    return httpTraffic.toJson();
+    return httpTraffic.toJson(user.utc);
   }
 }
 

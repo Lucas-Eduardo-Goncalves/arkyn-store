@@ -1,3 +1,4 @@
+import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { TrafficSourceRepository } from "../../../domain/repositories/trafficSource";
 import { WebhookRepository } from "../../../domain/repositories/webhook";
 import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
@@ -9,31 +10,28 @@ type InputProps = {
 class ListWebhooksUseCase {
   constructor(
     private webhookRepository: WebhookRepository,
-    private trafficSourceRepository: TrafficSourceRepository
+    private trafficSourceRepository: TrafficSourceRepository,
+    private userGateway: UserGatewayDTO
   ) {}
 
-  async execute(input: InputProps, userId: string) {
+  async execute(input: InputProps, token: string) {
     const { trafficSourceId } = input;
 
-    const trafficSource = await this.trafficSourceRepository.findById(
-      trafficSourceId
-    );
+    const [trafficSource, webhooks, user] = await Promise.all([
+      this.trafficSourceRepository.findById(trafficSourceId),
+      this.webhookRepository.findAll(trafficSourceId),
+      this.userGateway.findUnique(token),
+    ]);
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
     }
 
-    if (trafficSource.userId !== userId) {
+    if (trafficSource.userId !== user.id) {
       throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
-    const webhook = await this.webhookRepository.findAll(trafficSourceId);
-
-    if (!webhook) {
-      throw HttpAdapter.notFound("Webhook not found for this traffic source");
-    }
-
-    return webhook.map((w) => w.toJson());
+    return webhooks.map((w) => w.toJson(user.utc));
   }
 }
 

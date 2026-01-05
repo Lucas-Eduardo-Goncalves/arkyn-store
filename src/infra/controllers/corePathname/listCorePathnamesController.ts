@@ -11,7 +11,7 @@ class ListCorePathnamesController {
 
   async handle(route: RouteDTO) {
     try {
-      await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const searchParams = SearchParamsMapper.toObject({
         query: route.request.query,
@@ -26,7 +26,8 @@ class ListCorePathnamesController {
       const mappedFilter = SearchParamsMapper.toFilter(validatedParams);
 
       const corePathnames = await this.listCorePathnamesUseCase.execute(
-        mappedFilter
+        mappedFilter,
+        token
       );
 
       return route.response.json(corePathnames);

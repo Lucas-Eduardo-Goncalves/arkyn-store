@@ -10,7 +10,7 @@ class CreateDomainController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
       const trafficSourceId = route.request.params?.trafficSourceId;
       const schemaValidator = new SchemaValidatorAdapter(createDomainSchema);
 
@@ -19,7 +19,7 @@ class CreateDomainController {
         trafficSourceId,
       });
 
-      const domain = await this.createDomainUseCase.execute(data, userId);
+      const domain = await this.createDomainUseCase.execute(data, token);
       return route.response.json(domain, 201);
     } catch (error) {
       return ErrorHandlerAdapter.handle(error);

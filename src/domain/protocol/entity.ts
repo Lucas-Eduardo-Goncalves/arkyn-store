@@ -1,5 +1,5 @@
 type Entity = {
-  toJson(): any;
+  toJson(userUTC: number): any;
 };
 
 export { Entity };

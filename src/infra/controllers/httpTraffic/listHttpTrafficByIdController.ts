@@ -1,9 +1,7 @@
-import { SearchParamsMapper } from "../../../app/shared/searchParamsMapper";
 import { ListHttpTrafficByIdUseCase } from "../../../app/useCases/httpTraffic/listHttpTrafficByIdUseCase";
+import { AuthMiddleware } from "../../../main/middlewares/authMiddleware";
 import { RouteDTO } from "../../../main/types/RouteDTO";
 import { ErrorHandlerAdapter } from "../../adapters/errorHandlerAdapter";
-import { AuthMiddleware } from "../../../main/middlewares/authMiddleware";
-import { SchemaValidatorAdapter } from "../../adapters/schemaValidatorAdapter";
 import { HttpAdapter } from "../../adapters/httpAdapter";
 
 class ListHttpTrafficByIdController {
@@ -11,14 +9,15 @@ class ListHttpTrafficByIdController {
 
   async handle(route: RouteDTO) {
     try {
-      await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const httpTrafficId = route.request.params?.httpTrafficId;
       if (!httpTrafficId)
         throw HttpAdapter.badRequest("httpTrafficId param is required");
 
       const httpTraffics = await this.listHttpTrafficByIdUseCase.execute(
-        httpTrafficId
+        httpTrafficId,
+        token
       );
 
       return route.response.json(httpTraffics);

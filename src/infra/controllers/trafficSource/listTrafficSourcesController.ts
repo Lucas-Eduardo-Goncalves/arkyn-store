@@ -11,7 +11,7 @@ class ListTrafficSourcesController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const searchParams = SearchParamsMapper.toObject({
         query: route.request.query,
@@ -22,14 +22,13 @@ class ListTrafficSourcesController {
         listTrafficSourcesSchema
       );
 
-      const validatedParams = schemaValidator.validate({
-        ...searchParams,
-        userId,
-      });
+      const validatedParams = schemaValidator.validate(searchParams);
+
       const mappedFilter = SearchParamsMapper.toFilter(validatedParams);
 
       const trafficSources = await this.listTrafficSourcesUseCase.execute(
-        mappedFilter
+        mappedFilter,
+        token
       );
 
       return route.response.json(trafficSources);

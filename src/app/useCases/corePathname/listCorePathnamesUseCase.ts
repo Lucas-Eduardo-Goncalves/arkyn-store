@@ -1,3 +1,4 @@
+import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { CorePathnameRepository } from "../../../domain/repositories/corePathname";
 import { CorePathnameSearchParams } from "../../search/corePathnameSearchParams";
 
@@ -13,16 +14,20 @@ type InputProps = {
 };
 
 class ListCorePathnamesUseCase {
-  constructor(private corePathnameRepository: CorePathnameRepository) {}
+  constructor(
+    private corePathnameRepository: CorePathnameRepository,
+    private userGateway: UserGatewayDTO
+  ) {}
 
-  async execute(input: InputProps) {
+  async execute(input: InputProps, token: string) {
     const searchParams = new CorePathnameSearchParams(input);
 
-    const corePathnames = await this.corePathnameRepository.findAll(
-      searchParams
-    );
+    const [corePathnames, user] = await Promise.all([
+      this.corePathnameRepository.findAll(searchParams),
+      this.userGateway.findUnique(token),
+    ]);
 
-    return corePathnames.toJson();
+    return corePathnames.toJson(user.utc);
   }
 }
 

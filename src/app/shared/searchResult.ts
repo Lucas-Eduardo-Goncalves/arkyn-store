@@ -20,9 +20,9 @@ class SearchResult<E extends Entity = any> {
     this.meta = props.meta;
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
-      data: this.data.map((entity) => entity.toJson()),
+      data: this.data.map((entity) => entity.toJson(userUTC)),
       meta: {
         page: this.meta.page,
         pageLimit: this.meta.pageLimit,

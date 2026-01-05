@@ -10,7 +10,7 @@ class DeleteHttpTrafficController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
       const httpTrafficId = route.request.params?.httpTrafficId;
 
       const schemaValidator = new SchemaValidatorAdapter(
@@ -20,7 +20,7 @@ class DeleteHttpTrafficController {
 
       const httpTraffic = await this.deleteHttpTrafficUseCase.execute(
         validatedBody.httpTrafficId,
-        userId
+        token
       );
 
       return route.response.json(httpTraffic);

@@ -1,5 +1,6 @@
 import { CreateCoreLogUseCase } from "../../../app/useCases/coreLog/createCoreLogUseCase";
 import { CreateCoreLogController } from "../../../infra/controllers/coreLog/createCoreLogController";
+import { UserGateway } from "../../../infra/gateways/user";
 import { PrismaCoreLogRepository } from "../../../infra/repositories/coreLog";
 import { PrismaCorePathnameRepository } from "../../../infra/repositories/corePathname";
 import { PrismaRequestRepository } from "../../../infra/repositories/request";
@@ -11,13 +12,15 @@ const prismaTrafficSourceRepository = new PrismaTrafficSourceRepository();
 const prismaCorePathnameSourceRepository = new PrismaCorePathnameRepository();
 const prismaRequestRepository = new PrismaRequestRepository();
 const prismaResponseRepository = new PrismaResponseRepository();
+const userGateway = new UserGateway();
 
 const createCoreLogUseCase = new CreateCoreLogUseCase(
   prismaCoreLogRepository,
   prismaTrafficSourceRepository,
   prismaCorePathnameSourceRepository,
   prismaRequestRepository,
-  prismaResponseRepository
+  prismaResponseRepository,
+  userGateway
 );
 
 const createCoreLogController = new CreateCoreLogController(

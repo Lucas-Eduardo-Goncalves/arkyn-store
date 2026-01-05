@@ -5,6 +5,7 @@ import { CreateHttpTrafficUseCase } from "../../../app/useCases/httpTraffic/crea
 import { CreatePathnameUseCase } from "../../../app/useCases/pathname/createPathnameUseCase";
 import { CreateRequestUseCase } from "../../../app/useCases/request/createRequestUseCase";
 import { CreateResponseUseCase } from "../../../app/useCases/response/createResponseUseCase";
+import { UserGateway } from "../../../infra/gateways/user";
 import { PrismaDomainRepository } from "../../../infra/repositories/domain";
 import { PrismaHttpTrafficRepository } from "../../../infra/repositories/httpTraffic";
 import { PrismaPathnameRepository } from "../../../infra/repositories/pathname";
@@ -23,16 +24,19 @@ const prismaResponseRepository = new PrismaResponseRepository();
 const prismaWebhookRepository = new PrismaWebhookRepository();
 const fileStorage = new FileStorageService();
 const httpTrafficNotifier = new HttpTrafficNotifier(prismaWebhookRepository);
+const userGateway = new UserGateway();
 
 const createDomainUseCase = new CreateDomainUseCase(
   prismaDomainRepository,
-  prismaTrafficSourceRepository
+  prismaTrafficSourceRepository,
+  userGateway
 );
 
 const createPathnameUseCase = new CreatePathnameUseCase(
   prismaPathnameRepository,
   prismaDomainRepository,
-  prismaTrafficSourceRepository
+  prismaTrafficSourceRepository,
+  userGateway
 );
 
 const createHttpTrafficRepository = new CreateHttpTrafficUseCase(
@@ -42,17 +46,20 @@ const createHttpTrafficRepository = new CreateHttpTrafficUseCase(
   prismaPathnameRepository,
   prismaRequestRepository,
   prismaResponseRepository,
-  httpTrafficNotifier
+  httpTrafficNotifier,
+  userGateway
 );
 
 const createRequestUseCase = new CreateRequestUseCase(
   prismaRequestRepository,
-  fileStorage
+  fileStorage,
+  userGateway
 );
 
 const createResponseUseCase = new CreateResponseUseCase(
   prismaResponseRepository,
-  fileStorage
+  fileStorage,
+  userGateway
 );
 
 const onComposeHttpTrafficRecord = new OnComposeHttpTrafficRecordEvent(

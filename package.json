@@ -14,16 +14,16 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@arkyn/server": "^3.0.1-beta.88",
-    "@arkyn/shared": "^3.0.1-beta.88",
-    "@arkyn/templates": "^3.0.1-beta.88",
+    "@arkyn/server": "^3.0.1-beta.98",
+    "@arkyn/shared": "^3.0.1-beta.98",
+    "@arkyn/templates": "^3.0.1-beta.98",
     "@prisma/client": "5.22.0",
     "argon2": "^0.43.1",
     "discord.js": "^14.25.1",
     "dotenv": "^17.2.3",
-    "hono": "^4.10.6",
-    "jose": "^6.1.2",
-    "zod": "^4.1.12"
+    "hono": "^4.11.3",
+    "jose": "^6.1.3",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/bun": "latest",

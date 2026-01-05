@@ -9,14 +9,14 @@ class DeleteDomainController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
       const domainId = route.request.params?.domainId;
 
       if (!domainId) {
         throw HttpAdapter.badRequest("Domain ID is required");
       }
 
-      const domain = await this.deleteDomainUseCase.execute(domainId, userId);
+      const domain = await this.deleteDomainUseCase.execute(domainId, token);
       return route.response.json(domain);
     } catch (error) {
       return ErrorHandlerAdapter.handle(error);

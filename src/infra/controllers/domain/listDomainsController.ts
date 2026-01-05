@@ -11,7 +11,7 @@ class ListDomainsController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const searchParams = SearchParamsMapper.toObject({
         query: route.request.query,
@@ -25,7 +25,7 @@ class ListDomainsController {
 
       const domains = await this.listDomainsUseCase.execute(
         mappedFilter,
-        userId
+        token
       );
 
       return route.response.json(domains);

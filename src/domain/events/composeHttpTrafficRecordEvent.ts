@@ -14,7 +14,7 @@ class ComposeHttpTrafficRecordEvent {
   readonly queryParams: string;
   readonly responseHeaders: string;
   readonly responseBody: string | null;
-  readonly userId: string;
+  readonly token: string;
 
   constructor(data: ComposeHttpTrafficRecordEvent) {
     this.domainUrl = data.domainUrl;
@@ -30,7 +30,7 @@ class ComposeHttpTrafficRecordEvent {
     this.queryParams = data.queryParams;
     this.responseHeaders = data.responseHeaders;
     this.responseBody = data.responseBody;
-    this.userId = data.userId;
+    this.token = data.token;
   }
 }
 

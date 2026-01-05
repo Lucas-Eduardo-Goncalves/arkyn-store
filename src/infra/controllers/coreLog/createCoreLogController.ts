@@ -10,7 +10,7 @@ class CreateCoreLogController {
 
   async handle(route: RouteDTO) {
     try {
-      await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const trafficSourceId = route.request.params?.trafficSourceId;
       const body = route.request.body;
@@ -18,9 +18,13 @@ class CreateCoreLogController {
       const schemaValidator = new SchemaValidatorAdapter(createCoreLogSchema);
 
       const data = schemaValidator.validate({ ...body, trafficSourceId });
-      const trafficsource = await this.createCoreLogUseCase.execute(data);
 
-      return route.response.json(trafficsource, 201);
+      const trafficSource = await this.createCoreLogUseCase.execute(
+        data,
+        token
+      );
+
+      return route.response.json(trafficSource, 201);
     } catch (error) {
       return ErrorHandlerAdapter.handle(error);
     }

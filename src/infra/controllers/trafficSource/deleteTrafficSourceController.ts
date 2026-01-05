@@ -10,7 +10,7 @@ class DeleteTrafficSourceController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
       const trafficSourceId = route.request.params?.trafficSourceId;
 
       const schemaValidator = new SchemaValidatorAdapter(
@@ -20,7 +20,7 @@ class DeleteTrafficSourceController {
 
       const trafficSource = await this.deleteTrafficSourceUseCase.execute(
         validatedBody.trafficSourceId,
-        userId
+        token
       );
 
       return route.response.json(trafficSource);

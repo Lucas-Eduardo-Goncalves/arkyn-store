@@ -10,7 +10,7 @@ class CreateWebhookController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const body = route.request.body;
       const params = route.request.params;
@@ -18,7 +18,7 @@ class CreateWebhookController {
       const schemaValidator = new SchemaValidatorAdapter(createWebhookSchema);
       const data = schemaValidator.validate({ ...body, ...params });
 
-      const webhook = await this.createWebhookUseCase.execute(data, userId);
+      const webhook = await this.createWebhookUseCase.execute(data, token);
 
       return route.response.json(webhook, 201);
     } catch (error) {

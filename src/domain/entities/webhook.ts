@@ -75,15 +75,15 @@ class Webhook {
     this.updatedAt = new Date();
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
       id: this.id,
       value: this.value,
       level: this.level,
       type: this.type,
       trafficSourceId: this.trafficSourceId,
-      createdAt: FormatDateAdapter.format(this.createdAt),
-      updatedAt: FormatDateAdapter.format(this.updatedAt),
+      createdAt: FormatDateAdapter.format(this.createdAt, userUTC),
+      updatedAt: FormatDateAdapter.format(this.updatedAt, userUTC),
     };
   }
 }

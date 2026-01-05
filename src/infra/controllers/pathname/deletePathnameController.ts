@@ -10,7 +10,7 @@ class DeletePathnameController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
       const pathnameId = route.request.params?.pathnameId;
 
       const schemaValidator = new SchemaValidatorAdapter(deletePathnameSchema);
@@ -18,7 +18,7 @@ class DeletePathnameController {
 
       const pathname = await this.deletePathnameUseCase.execute(
         validatedBody.pathnameId,
-        userId
+        token
       );
 
       return route.response.json(pathname);

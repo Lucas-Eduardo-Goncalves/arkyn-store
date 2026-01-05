@@ -10,7 +10,7 @@ class CreatePathnameController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
 
       const trafficSourceId = route.request.params?.trafficSourceId;
       const domainId = route.request.params?.domainId;
@@ -24,7 +24,7 @@ class CreatePathnameController {
         domainId,
       });
 
-      const pathname = await this.createPathnameUseCase.execute(data, userId);
+      const pathname = await this.createPathnameUseCase.execute(data, token);
 
       return route.response.json(pathname, 201);
     } catch (error) {

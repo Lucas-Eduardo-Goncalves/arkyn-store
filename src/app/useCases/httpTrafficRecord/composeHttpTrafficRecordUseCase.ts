@@ -21,7 +21,7 @@ type InputProps = {
 class ComposeHttpTrafficRecordUseCase {
   constructor() {}
 
-  async execute(input: InputProps, userId: string) {
+  async execute(input: InputProps, token: string) {
     const {
       domainUrl,
       pathnameUrl,
@@ -54,7 +54,7 @@ class ComposeHttpTrafficRecordUseCase {
         responseHeaders,
         responseBody,
         elapsedTime,
-        userId,
+        token,
       })
     );
 

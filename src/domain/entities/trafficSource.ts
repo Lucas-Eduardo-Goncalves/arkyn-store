@@ -69,14 +69,14 @@ class TrafficSource {
     this.updatedAt = new Date();
   }
 
-  toJson() {
+  toJson(userUTC: number) {
     return {
       id: this.id,
       name: this.name,
       trafficDomain: this.trafficDomain,
       userId: this.userId,
-      createdAt: FormatDateAdapter.format(this.createdAt),
-      updatedAt: FormatDateAdapter.format(this.updatedAt),
+      createdAt: FormatDateAdapter.format(this.createdAt, userUTC),
+      updatedAt: FormatDateAdapter.format(this.updatedAt, userUTC),
     };
   }
 }

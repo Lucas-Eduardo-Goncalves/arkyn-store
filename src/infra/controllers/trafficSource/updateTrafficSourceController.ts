@@ -10,7 +10,7 @@ class UpdateTrafficSourceController {
 
   async handle(route: RouteDTO) {
     try {
-      const { userId } = await AuthMiddleware.authenticate(route);
+      const { token } = await AuthMiddleware.authenticate(route);
       const trafficSourceId = route.request.params?.trafficSourceId;
 
       const schemaValidator = new SchemaValidatorAdapter(
@@ -24,7 +24,7 @@ class UpdateTrafficSourceController {
 
       const trafficSource = await this.updateTrafficSourceUseCase.execute(
         data,
-        userId
+        token
       );
 
       return route.response.json(trafficSource, 201);
