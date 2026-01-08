@@ -32,6 +32,8 @@ const listHttpTrafficsSchema = paginationSchema.extend({
   sort: z
     .enum(["elapsedTime", "status", "method", "level", "createdAt"])
     .optional(),
+  id: z.uuidv7("Invalid http traffic ID format").optional(),
+  level: z.enum(["info", "warning", "fatal"]).optional(),
 });
 
 export {
