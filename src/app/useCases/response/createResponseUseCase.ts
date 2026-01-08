@@ -1,6 +1,7 @@
 import { Response } from "../../../domain/entities/response";
 import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { ResponseRepository } from "../../../domain/repositories/response";
+import { MaskSensitiveDataAdapter } from "../../../infra/adapters/maskSensitiveDataAdapter";
 import { FileStorageService } from "../../../infra/service/fileStorageService";
 
 type InputProps = {
@@ -23,7 +24,11 @@ class CreateResponseUseCase {
       this.userGateway.findUnique(token),
     ]);
 
-    const response = Response.create({ headers, bodyUrl, bodyPreview: body });
+    const response = Response.create({
+      headers,
+      bodyUrl,
+      bodyPreview: body ? MaskSensitiveDataAdapter.mask(body) : null,
+    });
 
     await this.responseRepository.createResponse(response);
     return response.toJson(user.utc);

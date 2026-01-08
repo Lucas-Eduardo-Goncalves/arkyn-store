@@ -1,6 +1,7 @@
 import { Request } from "../../../domain/entities/request";
 import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { RequestRepository } from "../../../domain/repositories/request";
+import { MaskSensitiveDataAdapter } from "../../../infra/adapters/maskSensitiveDataAdapter";
 import { FileStorageService } from "../../../infra/service/fileStorageService";
 
 type InputProps = {
@@ -26,9 +27,9 @@ class CreateRequestUseCase {
 
     const request = Request.create({
       headers,
-      bodyPreview: body,
-      bodyUrl,
       queryParams,
+      bodyUrl,
+      bodyPreview: body ? MaskSensitiveDataAdapter.mask(body) : null,
     });
 
     await this.requestRepository.createRequest(request);
