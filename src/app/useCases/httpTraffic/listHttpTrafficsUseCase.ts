@@ -2,6 +2,7 @@ import { UserGatewayDTO } from "../../../domain/gateways/user";
 import { HttpTrafficRepository } from "../../../domain/repositories/httpTraffic";
 import { TrafficSourceRepository } from "../../../domain/repositories/trafficSource";
 import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
+import { HttpMethod } from "../../../main/types/HttpMethod";
 import { HttpTrafficSearchParams } from "../../search/httpTrafficSearchParams";
 
 type InputProps = {
@@ -11,7 +12,11 @@ type InputProps = {
   sortDirection?: "asc" | "desc";
 
   filter: {
+    method?: HttpMethod;
+    level?: "info" | "warning" | "fatal";
     trafficSourceId: string;
+    status?: number;
+    id?: string;
   };
 };
 
