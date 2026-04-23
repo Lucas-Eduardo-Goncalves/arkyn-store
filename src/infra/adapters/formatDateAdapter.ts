@@ -4,9 +4,9 @@ class FormatDateAdapter {
   static format(date: Date, utc: number): string {
     return formatDate(
       date.toISOString().split("T"),
-      "isoDate",
+      "timestamp",
       "MM/DD/YYYY at hh:mm:ss",
-      utc
+      utc,
     );
   }
 
