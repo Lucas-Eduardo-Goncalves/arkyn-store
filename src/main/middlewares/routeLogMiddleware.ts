@@ -51,8 +51,8 @@ class RouteLogMiddleware {
 
     this.getMethodColored(method, formattedDuration, url);
 
-    if (c.res.status > 200 || c.res.status < 300) {
-      console.log(`\x1b[31m${method} => ERROR:${c.res.status}\x1b[0m`);
+    if (!c.res.ok) {
+      console.log(`\x1b[31mERROR:${c.res.status}\x1b[0m`);
       console.log(await c.res.json());
     }
   }
