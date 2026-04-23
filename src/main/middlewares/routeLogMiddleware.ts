@@ -4,7 +4,7 @@ class RouteLogMiddleware {
   private static getMethodColored(
     method: string,
     timestamp: string,
-    url: string
+    url: string,
   ) {
     let returnLog = "";
 
@@ -48,6 +48,11 @@ class RouteLogMiddleware {
     const endTime = performance.now();
     const duration = Math.abs(endTime - startTime); // Garantir valor positivo
     const formattedDuration = this.formatDuration(duration);
+
+    if (c.res.status > 200 || c.res.status < 300) {
+      console.log(`\x1b[31m${c.res.status}\x1b[0m`); // Red for errors
+      console.log(c.res.body);
+    }
 
     this.getMethodColored(method, formattedDuration, url);
   }
