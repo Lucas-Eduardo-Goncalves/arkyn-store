@@ -22,7 +22,7 @@ class ListPathnamesUseCase {
     private pathnameRepository: PathnameRepository,
     private trafficSourceRepository: TrafficSourceRepository,
     private domainRepository: DomainRepository,
-    private userGateway: UserGatewayDTO
+    private userGateway: UserGatewayDTO,
   ) {}
 
   async execute(input: InputProps, token: string) {
@@ -37,10 +37,6 @@ class ListPathnamesUseCase {
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
-    }
-
-    if (trafficSource.userId !== user.id) {
-      throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
     if (!domain) {

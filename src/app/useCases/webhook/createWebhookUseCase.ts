@@ -15,7 +15,7 @@ class CreateWebhookUseCase {
   constructor(
     private webhookRepository: WebhookRepository,
     private trafficSourceRepository: TrafficSourceRepository,
-    private userGateway: UserGatewayDTO
+    private userGateway: UserGatewayDTO,
   ) {}
 
   async execute(input: InputProps, token: string) {
@@ -31,12 +31,8 @@ class CreateWebhookUseCase {
       throw HttpAdapter.notFound("Traffic source not found");
     }
 
-    if (trafficSource.userId !== user.id) {
-      throw HttpAdapter.forbidden("You do not own this traffic source.");
-    }
-
     const webhookAlreadyExistsForLevel = webhooks.some(
-      (webhook) => webhook.level === level
+      (webhook) => webhook.level === level,
     );
 
     if (webhookAlreadyExistsForLevel) {

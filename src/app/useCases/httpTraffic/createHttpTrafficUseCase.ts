@@ -31,7 +31,7 @@ class CreateHttpTrafficUseCase {
     private requestRepository: RequestRepository,
     private responseRepository: ResponseRepository,
     private httpTrafficNotifier: HttpTrafficNotifier,
-    private userGateway: UserGatewayDTO
+    private userGateway: UserGatewayDTO,
   ) {}
 
   async execute(input: InputProps, token: string) {
@@ -59,10 +59,6 @@ class CreateHttpTrafficUseCase {
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
-    }
-
-    if (trafficSource.userId !== user.id) {
-      throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
     if (!domain) {

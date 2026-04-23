@@ -9,7 +9,7 @@ type InputProps = {
 class DeleteWebhookUseCase {
   constructor(
     private webhookRepository: WebhookRepository,
-    private trafficSourceRepository: TrafficSourceRepository
+    private trafficSourceRepository: TrafficSourceRepository,
   ) {}
 
   async execute(input: InputProps, userId: string) {
@@ -22,18 +22,15 @@ class DeleteWebhookUseCase {
     }
 
     const trafficSource = await this.trafficSourceRepository.findById(
-      webhook.trafficSourceId
+      webhook.trafficSourceId,
     );
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
     }
 
-    if (trafficSource.userId !== userId) {
-      throw HttpAdapter.forbidden("You do not own this traffic source.");
-    }
-
     await this.webhookRepository.deleteWebhook(webhook);
+
     return;
   }
 }

@@ -5,7 +5,7 @@ import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
 class DeleteDomainUseCase {
   constructor(
     private domainRepository: DomainRepository,
-    private trafficSourceRepository: TrafficSourceRepository
+    private trafficSourceRepository: TrafficSourceRepository,
   ) {}
 
   async execute(domainId: string, userId: string) {
@@ -16,15 +16,11 @@ class DeleteDomainUseCase {
     }
 
     const trafficSource = await this.trafficSourceRepository.findById(
-      domain.trafficSourceId
+      domain.trafficSourceId,
     );
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
-    }
-
-    if (trafficSource.userId !== userId) {
-      throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
     await this.domainRepository.deleteDomain(domain.id);

@@ -11,7 +11,7 @@ class ListWebhooksUseCase {
   constructor(
     private webhookRepository: WebhookRepository,
     private trafficSourceRepository: TrafficSourceRepository,
-    private userGateway: UserGatewayDTO
+    private userGateway: UserGatewayDTO,
   ) {}
 
   async execute(input: InputProps, token: string) {
@@ -25,10 +25,6 @@ class ListWebhooksUseCase {
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
-    }
-
-    if (trafficSource.userId !== user.id) {
-      throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
     return webhooks.map((w) => w.toJson(user.utc));

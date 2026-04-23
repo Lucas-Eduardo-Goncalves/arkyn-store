@@ -5,7 +5,7 @@ import { HttpAdapter } from "../../../infra/adapters/httpAdapter";
 class DeletePathnameUseCase {
   constructor(
     private pathnameRepository: PathnameRepository,
-    private trafficSourceRepository: TrafficSourceRepository
+    private trafficSourceRepository: TrafficSourceRepository,
   ) {}
 
   async execute(pathnameId: string, userId: string) {
@@ -16,15 +16,11 @@ class DeletePathnameUseCase {
     }
 
     const trafficSource = await this.trafficSourceRepository.findById(
-      pathname.trafficSourceId
+      pathname.trafficSourceId,
     );
 
     if (!trafficSource) {
       throw HttpAdapter.notFound("Traffic source not found");
-    }
-
-    if (trafficSource.userId !== userId) {
-      throw HttpAdapter.forbidden("You do not own this traffic source.");
     }
 
     await this.pathnameRepository.deletePathname(pathname.id);
