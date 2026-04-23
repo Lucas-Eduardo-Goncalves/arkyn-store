@@ -1,4 +1,4 @@
-import { maskSensitiveData } from "@arkyn/shared";
+import { parseSensitiveData } from "@arkyn/shared";
 
 const SENSITIVE_KEYWORDS = [
   // Credenciais e Autenticação
@@ -271,7 +271,7 @@ const SENSITIVE_ENV_VARS = [
 
 class MaskSensitiveDataAdapter {
   static mask(data: string): string {
-    return maskSensitiveData(data, [
+    return parseSensitiveData(data, [
       ...SENSITIVE_ENV_VARS,
       ...SENSITIVE_KEYWORDS,
     ]);

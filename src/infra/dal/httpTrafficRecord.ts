@@ -7,7 +7,7 @@ import { HttpTrafficRecordMapper } from "../mappers/httpTrafficRecord";
 
 class PrismaHttpTrafficRecordDAL implements HttpTrafficRecordDAL {
   async findAll(
-    searchParams: HttpTrafficRecordSearchParams
+    searchParams: HttpTrafficRecordSearchParams,
   ): Promise<SearchResult<HttpTrafficRecord>> {
     const [httpTraffics, httpTrafficCount] = await Promise.all([
       databaseConnection.httpTraffic.findMany({
@@ -26,7 +26,7 @@ class PrismaHttpTrafficRecordDAL implements HttpTrafficRecordDAL {
 
     return new SearchResult<HttpTrafficRecord>({
       data: httpTraffics.map((httpTraffic) =>
-        HttpTrafficRecordMapper.toView(httpTraffic)
+        HttpTrafficRecordMapper.toView(httpTraffic),
       ),
       meta: {
         page: searchParams.page,
