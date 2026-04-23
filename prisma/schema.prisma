@@ -54,7 +54,7 @@ model Webhook {
   createdAt       DateTime
   updatedAt       DateTime
   trafficSourceId String
-  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
+  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
 
   @@index([type, level, createdAt, updatedAt])
 }
@@ -71,7 +71,7 @@ model TrafficSourceShare {
   permission      SharePermission
   createdAt       DateTime
   updatedAt       DateTime
-  trafficSource   TrafficSource   @relation(fields: [trafficSourceId], references: [id])
+  trafficSource   TrafficSource   @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
 
   @@unique([ownerId, sharedWithId, trafficSourceId])
   @@index([sharedWithId, trafficSourceId, createdAt, updatedAt])
@@ -88,7 +88,7 @@ model Domain {
   protocol        Protocol
   trafficSourceId String
   createdAt       DateTime
-  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
+  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
   pathname        Pathname[]
   httpTraffic     HttpTraffic[]
 
@@ -101,8 +101,8 @@ model Pathname {
   trafficSourceId String
   domainId        String
   createdAt       DateTime
-  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
-  domain          Domain        @relation(fields: [domainId], references: [id])
+  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
+  domain          Domain        @relation(fields: [domainId], references: [id], onDelete: Cascade)
   httpTraffic     HttpTraffic[]
 
   @@index([trafficSourceId, createdAt])
@@ -121,11 +121,11 @@ model HttpTraffic {
   requestId       String        @unique
   responseId      String        @unique
   createdAt       DateTime
-  domain          Domain        @relation(fields: [domainId], references: [id])
-  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
-  pathname        Pathname      @relation(fields: [pathnameId], references: [id])
-  request         Request       @relation(fields: [requestId], references: [id])
-  response        Response      @relation(fields: [responseId], references: [id])
+  domain          Domain        @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
+  pathname        Pathname      @relation(fields: [pathnameId], references: [id], onDelete: Cascade)
+  request         Request       @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  response        Response      @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
   @@index([status, method, level, trafficUserId, trafficSourceId, elapsedTime, domainId, pathnameId, createdAt])
 }
@@ -163,10 +163,10 @@ model CoreLog {
   requestId       String        @unique
   responseId      String        @unique
   createdAt       DateTime
-  corePathname    CorePathname  @relation(fields: [corePathnameId], references: [id])
-  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
-  request         Request       @relation(fields: [requestId], references: [id])
-  response        Response      @relation(fields: [responseId], references: [id])
+  corePathname    CorePathname  @relation(fields: [corePathnameId], references: [id], onDelete: Cascade)
+  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
+  request         Request       @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  response        Response      @relation(fields: [responseId], references: [id], onDelete: Cascade)
 }
 
 model CorePathname {
@@ -174,7 +174,7 @@ model CorePathname {
   value           String
   trafficSourceId String
   createdAt       DateTime
-  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id])
+  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
   exception       Exception[]
   coreLog         CoreLog[]
 }
@@ -190,8 +190,8 @@ model Exception {
   corePathnameId      String
   createdAt           DateTime
   updatedAt           DateTime
-  trafficSource       TrafficSource         @relation(fields: [trafficSourceId], references: [id])
-  corePathname        CorePathname          @relation(fields: [corePathnameId], references: [id])
+  trafficSource       TrafficSource         @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
+  corePathname        CorePathname          @relation(fields: [corePathnameId], references: [id], onDelete: Cascade)
   exceptionOccurrence ExceptionOccurrence[]
 }
 
@@ -199,5 +199,5 @@ model ExceptionOccurrence {
   id          String    @id
   exceptionId String
   createdAt   DateTime
-  exception   Exception @relation(fields: [exceptionId], references: [id])
+  exception   Exception @relation(fields: [exceptionId], references: [id], onDelete: Cascade)
 }
