@@ -46,15 +46,15 @@ class RouteLogMiddleware {
     await next();
 
     const endTime = performance.now();
-    const duration = Math.abs(endTime - startTime); // Garantir valor positivo
+    const duration = Math.abs(endTime - startTime);
     const formattedDuration = this.formatDuration(duration);
 
-    if (c.res.status > 200 || c.res.status < 300) {
-      console.log(`\x1b[31m${c.res.status}\x1b[0m`); // Red for errors
-      console.log(c.res.body);
-    }
-
     this.getMethodColored(method, formattedDuration, url);
+
+    if (c.res.status > 200 || c.res.status < 300) {
+      console.log(`\x1b[31m${method} => ERROR:${c.res.status}\x1b[0m`);
+      console.log(await c.res.json());
+    }
   }
 }
 
