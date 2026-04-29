@@ -12,7 +12,7 @@ type InputProps = {
 class ListTrafficSourcesUseCase {
   constructor(
     private trafficSourceRepository: TrafficSourceRepository,
-    private userGateway: UserGatewayDTO
+    private userGateway: UserGatewayDTO,
   ) {}
 
   async execute(input: InputProps, token: string) {
@@ -20,12 +20,11 @@ class ListTrafficSourcesUseCase {
 
     const searchParams = new TrafficSourceSearchParams({
       ...input,
-      filter: { userId: user.id },
+      filter: { userId: user.id, sharedWithId: user.id },
     });
 
-    const trafficSources = await this.trafficSourceRepository.findAll(
-      searchParams
-    );
+    const trafficSources =
+      await this.trafficSourceRepository.findAll(searchParams);
 
     return trafficSources.toJson(user.utc);
   }

@@ -50,11 +50,6 @@ class RouteLogMiddleware {
     const formattedDuration = this.formatDuration(duration);
 
     this.getMethodColored(method, formattedDuration, url);
-
-    if (!c.res.ok) {
-      console.log(`\x1b[31mERROR:${c.res.status}\x1b[0m`);
-      console.log(await c.res.json());
-    }
   }
 }
 

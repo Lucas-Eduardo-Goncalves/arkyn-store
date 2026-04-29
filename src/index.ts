@@ -3,20 +3,23 @@ import { hostname } from "os";
 import { name, version } from "../package.json";
 
 import { handlersFactory } from "./app/handlers/handlersFactory";
+
+import { environmentVariables } from "./main/config/environmentVariables";
 import { RouteLogMiddleware } from "./main/middlewares/routeLogMiddleware";
 
 import { DiscordAdapter } from "./infra/adapters/discordAdapter";
-import { environmentVariables } from "./main/config/environmentVariables";
-import { coreLogRoutes } from "./main/routes/core-log";
-import { corePathnameRoutes } from "./main/routes/core-pathname.routes";
-import { domainRoutes } from "./main/routes/domain.routes";
-import { httpTrafficRecordRoutes } from "./main/routes/http-traffic-record.routes";
-import { httpTrafficRoutes } from "./main/routes/http-traffic.routes";
-import { pathnameRoutes } from "./main/routes/pathname.routes";
-import { requestRoutes } from "./main/routes/request.routes";
-import { responseRoutes } from "./main/routes/response.routes";
-import { trafficSourceRoutes } from "./main/routes/trafficSource.routes";
-import { webhookRoutes } from "./main/routes/webhook.route";
+
+import { coreLogRoutes } from "./main/routes/coreLog";
+import { corePathnameRoutes } from "./main/routes/corePathname";
+import { domainRoutes } from "./main/routes/domain";
+import { httpTrafficRoutes } from "./main/routes/httpTraffic";
+import { httpTrafficRecordRoutes } from "./main/routes/httpTrafficRecord";
+import { pathnameRoutes } from "./main/routes/pathname";
+import { requestRoutes } from "./main/routes/request";
+import { responseRoutes } from "./main/routes/response";
+import { sharedTrafficSourceRoutes } from "./main/routes/sharedTrafficSource";
+import { trafficSourceRoutes } from "./main/routes/trafficSource";
+import { webhookRoutes } from "./main/routes/webhook";
 
 const app = new Hono();
 
@@ -38,6 +41,7 @@ app.route("/http-traffics", httpTrafficRoutes);
 app.route("/pathnames", pathnameRoutes);
 app.route("/requests", requestRoutes);
 app.route("/responses", responseRoutes);
+app.route("/shared-traffic-sources", sharedTrafficSourceRoutes);
 app.route("/traffic-sources", trafficSourceRoutes);
 app.route("/webhooks", webhookRoutes);
 

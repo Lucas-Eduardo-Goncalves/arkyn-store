@@ -11,11 +11,11 @@ const userGateway = new UserGateway();
 const createResponseUseCase = new CreateResponseUseCase(
   prismaResponseRepository,
   fileStorage,
-  userGateway
+  userGateway,
 );
 
 const createResponseController = new CreateResponseController(
-  createResponseUseCase
+  createResponseUseCase,
 );
 
 const createResponse = {

@@ -4,11 +4,10 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
+// HttpTraffic, CoreLog
 enum Method {
   post
   put
@@ -17,6 +16,7 @@ enum Method {
   get
 }
 
+// Webhook, HttpTraffic, CoreLog
 enum Level {
   info
   fatal
@@ -24,7 +24,7 @@ enum Level {
 }
 
 model TrafficSource {
-  id            String               @id
+  id            String                @id
   name          String
   trafficDomain String
   userId        String
@@ -37,9 +37,33 @@ model TrafficSource {
   exception     Exception[]
   coreLog       CoreLog[]
   webhook       Webhook[]
-  shares        TrafficSourceShare[]
+  shares        SharedTrafficSource[]
 
   @@index([userId, createdAt, updatedAt])
+}
+
+enum SharedPermission {
+  readOnly
+}
+
+enum SharedStatus {
+  pending
+  accepted
+  rejected
+}
+
+model SharedTrafficSource {
+  id              String           @id
+  userId          String
+  sharedWithId    String
+  trafficSourceId String
+  permission      SharedPermission
+  status          SharedStatus
+  createdAt       DateTime
+  updatedAt       DateTime
+  trafficSource   TrafficSource    @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
+
+  @@index([sharedWithId, trafficSourceId, createdAt, updatedAt])
 }
 
 enum WebhookType {
@@ -59,36 +83,18 @@ model Webhook {
   @@index([type, level, createdAt, updatedAt])
 }
 
-enum SharePermission {
-  READ_ONLY
-}
-
-model TrafficSourceShare {
-  id              String          @id
-  ownerId         String
-  sharedWithId    String
-  trafficSourceId String
-  permission      SharePermission
-  createdAt       DateTime
-  updatedAt       DateTime
-  trafficSource   TrafficSource   @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
-
-  @@unique([ownerId, sharedWithId, trafficSourceId])
-  @@index([sharedWithId, trafficSourceId, createdAt, updatedAt])
-}
-
-enum Protocol {
+enum DomainProtocol {
   http
   https
 }
 
 model Domain {
-  id              String        @id
+  id              String         @id
   value           String
-  protocol        Protocol
+  protocol        DomainProtocol
   trafficSourceId String
   createdAt       DateTime
-  trafficSource   TrafficSource @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
+  trafficSource   TrafficSource  @relation(fields: [trafficSourceId], references: [id], onDelete: Cascade)
   pathname        Pathname[]
   httpTraffic     HttpTraffic[]
 
@@ -106,6 +112,27 @@ model Pathname {
   httpTraffic     HttpTraffic[]
 
   @@index([trafficSourceId, createdAt])
+}
+
+model Request {
+  id          String       @id
+  headers     String
+  bodyPreview String?
+  bodyUrl     String?
+  queryParams String?
+  createdAt   DateTime
+  httpTraffic HttpTraffic?
+  coreLog     CoreLog?
+}
+
+model Response {
+  id          String       @id
+  headers     String
+  bodyPreview String?
+  bodyUrl     String?
+  createdAt   DateTime
+  httpTraffic HttpTraffic?
+  coreLog     CoreLog?
 }
 
 model HttpTraffic {
@@ -128,27 +155,6 @@ model HttpTraffic {
   response        Response      @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
   @@index([status, method, level, trafficUserId, trafficSourceId, elapsedTime, domainId, pathnameId, createdAt])
-}
-
-model Request {
-  id          String       @id
-  headers     String
-  bodyPreview String?
-  bodyUrl     String?
-  queryParams String?
-  createdAt   DateTime
-  httpTraffic HttpTraffic?
-  coreLog     CoreLog?
-}
-
-model Response {
-  id          String       @id
-  headers     String
-  bodyPreview String?
-  bodyUrl     String?
-  createdAt   DateTime
-  httpTraffic HttpTraffic?
-  coreLog     CoreLog?
 }
 
 model CoreLog {

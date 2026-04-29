@@ -8,22 +8,33 @@ import { CacheService } from "../service/cache";
 
 class PrismaTrafficSourceRepository implements TrafficSourceRepository {
   async findAll(
-    searchParams: TrafficSourceSearchParams
+    searchParams: TrafficSourceSearchParams,
   ): Promise<SearchResult<TrafficSource>> {
+    const { filter, page, pageLimit, sort, sortDirection } = searchParams;
+
+    const userId = filter?.userId;
+    const sharedWithId = filter?.sharedWithId;
+
+    const where: any = {
+      OR: [
+        { userId },
+        { shares: { some: { sharedWithId, status: "accepted" } } },
+      ],
+    };
+
     const [trafficSources, count] = await Promise.all([
-      databaseConnection.trafficSource.findMany(searchParams.toPrisma()),
-      databaseConnection.trafficSource.count({
-        where: searchParams.toPrisma().where,
+      databaseConnection.trafficSource.findMany({
+        where,
+        skip: (page - 1) * pageLimit,
+        take: pageLimit,
+        orderBy: sort ? { [sort]: sortDirection } : undefined,
       }),
+      databaseConnection.trafficSource.count({ where }),
     ]);
 
     return new SearchResult({
       data: trafficSources.map(TrafficSourceMapper.toEntity),
-      meta: {
-        page: searchParams.page,
-        pageLimit: searchParams.pageLimit,
-        totalItems: count,
-      },
+      meta: { page, pageLimit, totalItems: count },
     });
   }
 
@@ -42,7 +53,7 @@ class PrismaTrafficSourceRepository implements TrafficSourceRepository {
   }
 
   async findByDomain(
-    trafficSourceDomain: string
+    trafficSourceDomain: string,
   ): Promise<TrafficSource | null> {
     const trafficSource = await databaseConnection.trafficSource.findFirst({
       where: { trafficDomain: trafficSourceDomain },
@@ -53,14 +64,14 @@ class PrismaTrafficSourceRepository implements TrafficSourceRepository {
   }
 
   async createTrafficSource(
-    trafficSource: TrafficSource
+    trafficSource: TrafficSource,
   ): Promise<TrafficSource> {
     await databaseConnection.trafficSource.create({ data: trafficSource });
     return trafficSource;
   }
 
   async updateTrafficSource(
-    trafficSource: TrafficSource
+    trafficSource: TrafficSource,
   ): Promise<TrafficSource> {
     await databaseConnection.trafficSource.update({
       data: trafficSource,
