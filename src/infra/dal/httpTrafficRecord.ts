@@ -20,7 +20,7 @@ class PrismaHttpTrafficRecordDAL implements HttpTrafficRecordDAL {
         },
       }),
       databaseConnection.httpTraffic.count({
-        ...searchParams.toPrismaCount,
+        ...searchParams.toPrismaCount(),
       }),
     ]);
 

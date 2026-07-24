@@ -22,6 +22,10 @@ type InputProps = {
     trafficSourceId: string;
     status?: number;
     protocol?: "http" | "https";
+    domainId?: string;
+    pathnameId?: string;
+    startDate?: Date;
+    endDate?: Date;
   };
 };
 

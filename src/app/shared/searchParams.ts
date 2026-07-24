@@ -15,6 +15,10 @@ type ToPrismaOutputProps = {
   orderBy?: { [key: string]: SortDirection };
 };
 
+type ToPrismaCountOutputProps = {
+  where?: any;
+};
+
 const PAGE_DEFAULT = 1;
 const PAGE_LIMIT_DEFAULT = 20;
 const SORT_DEFAULT = "createdAt";
@@ -49,11 +53,8 @@ class SearchParams<Filter> {
     return filter;
   }
 
-  toPrismaCount(): ToPrismaOutputProps {
-    let filter: ToPrismaOutputProps = {
-      skip: 0,
-      take: 0,
-    };
+  toPrismaCount(): ToPrismaCountOutputProps {
+    let filter: ToPrismaCountOutputProps = {};
 
     if (this._filter) filter = { ...filter, where: this._filter };
     return filter;
