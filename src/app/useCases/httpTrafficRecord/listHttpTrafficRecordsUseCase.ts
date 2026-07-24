@@ -26,6 +26,8 @@ type InputProps = {
     pathnameId?: string;
     startDate?: Date;
     endDate?: Date;
+    requestBodyPreview?: string;
+    responseBodyPreview?: string;
   };
 };
 

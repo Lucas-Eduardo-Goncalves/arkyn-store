@@ -11,19 +11,45 @@ type Filter = {
   pathnameId?: string;
   startDate?: Date;
   endDate?: Date;
+  requestBodyPreview?: string;
+  responseBodyPreview?: string;
 };
 
 class HttpTrafficRecordSearchParams extends SearchParams<Filter> {
+  private escapeForStoredJson(value: string): string {
+    return JSON.stringify(value).slice(1, -1);
+  }
+
   private buildWhere(): Record<string, any> | undefined {
     if (!this.filter) return undefined;
 
-    const { startDate, endDate, ...rest } = this.filter;
+    const {
+      startDate,
+      endDate,
+      requestBodyPreview,
+      responseBodyPreview,
+      ...rest
+    } = this.filter;
     const where: Record<string, any> = { ...rest };
 
     if (startDate || endDate) {
       where.createdAt = {
         ...(startDate ? { gte: startDate } : {}),
         ...(endDate ? { lte: endDate } : {}),
+      };
+    }
+
+    if (requestBodyPreview) {
+      where.request = {
+        bodyPreview: { contains: this.escapeForStoredJson(requestBodyPreview) },
+      };
+    }
+
+    if (responseBodyPreview) {
+      where.response = {
+        bodyPreview: {
+          contains: this.escapeForStoredJson(responseBodyPreview),
+        },
       };
     }
 

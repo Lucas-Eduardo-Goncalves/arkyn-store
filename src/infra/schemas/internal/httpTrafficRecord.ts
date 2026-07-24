@@ -54,6 +54,14 @@ const listHttpTrafficRecordsSchema = paginationSchema
       .pipe(z.number().int("Status must be an integer").optional()),
     startDate: z.coerce.date("Invalid start date format").optional(),
     endDate: z.coerce.date("Invalid end date format").optional(),
+    requestBodyPreview: z
+      .string()
+      .min(1, "Request body preview cannot be empty")
+      .optional(),
+    responseBodyPreview: z
+      .string()
+      .min(1, "Response body preview cannot be empty")
+      .optional(),
     sort: z.enum(["elapsedTime", "status", "method", "level"]).optional(),
   })
   .refine((data) => !data.startDate || !data.endDate || data.startDate <= data.endDate, {
