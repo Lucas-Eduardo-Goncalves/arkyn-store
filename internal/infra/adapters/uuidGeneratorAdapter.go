@@ -2,6 +2,8 @@ package adapters
 
 import "github.com/google/uuid"
 
-func NewUuid() string {
+type UuidGenerator struct{}
+
+func (d *UuidGenerator) Generate() string {
 	return uuid.NewString()
 }
