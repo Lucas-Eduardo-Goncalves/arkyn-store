@@ -21,14 +21,22 @@ func NewListTrafficSourcesController(listTrafficSourcesUseCase listTrafficSource
 }
 
 func (c *ListTrafficSourcesController) Handle(w http.ResponseWriter, r *http.Request) error {
-	userId := r.URL.Query().Get("userId")
+	userId := r.PathValue("userId")
 	trafficSources, err := c.listTrafficSourcesUseCase.Handle(userId)
 
 	if err != nil {
 		return adapters.NewBadRequest("Invalid user id")
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	body, err := json.Marshal(trafficSources)
 
-	return json.NewEncoder(w).Encode(trafficSources)
+	if err != nil {
+		return err
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
+
+	return nil
 }
