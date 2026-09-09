@@ -13,4 +13,5 @@ func RegisterTrafficSourceRoutes(mux *http.ServeMux) {
 
 	mux.HandleFunc("GET /traffic-sources/{userId}", contracts.Adapt(trafficSourceFactories.NewListTrafficSourcesFactory(trafficSourceRepository)))
 	mux.HandleFunc("POST /traffic-sources", contracts.Adapt(trafficSourceFactories.NewCreateTrafficSourceFactory(trafficSourceRepository)))
+	mux.HandleFunc("GET /traffic-sources/unic/{trafficSourceId}", contracts.Adapt(trafficSourceFactories.NewListTrafficSourceByIdFactory(trafficSourceRepository)))
 }
