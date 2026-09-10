@@ -1,7 +1,6 @@
 package trafficSourceRepositories
 
 import (
-	"errors"
 	"sync"
 
 	"github.com/Lucas-Eduardo-Goncalves/arkyn-store/internal/domain/entities"
@@ -35,8 +34,9 @@ func (r *InMemoryTrafficSourceRepository) FindById(trafficSourceId string) (*ent
 	defer r.mu.Unlock()
 
 	trafficSource, ok := r.data[trafficSourceId]
+
 	if !ok {
-		return nil, errors.New("traffic source not found")
+		return nil, nil
 	}
 
 	return trafficSource, nil
@@ -52,7 +52,7 @@ func (r *InMemoryTrafficSourceRepository) FindByDomain(userId string, trafficSou
 		}
 	}
 
-	return nil, errors.New("traffic source not found")
+	return nil, nil
 }
 
 func (r *InMemoryTrafficSourceRepository) Create(trafficSource *entities.TrafficSource) (*entities.TrafficSource, error) {

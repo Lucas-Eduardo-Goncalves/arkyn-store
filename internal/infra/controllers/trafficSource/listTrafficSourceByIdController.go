@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/Lucas-Eduardo-Goncalves/arkyn-store/internal/domain/entities"
-	"github.com/Lucas-Eduardo-Goncalves/arkyn-store/internal/infra/adapters"
 )
 
 type listTrafficSourceByIdUseCase interface {
@@ -25,10 +24,10 @@ func (c *ListTrafficSourceByIdController) Handle(w http.ResponseWriter, r *http.
 	trafficSource, err := c.listTrafficSourceByIdUseCase.Handle(trafficSourceId)
 
 	if err != nil {
-		return adapters.NewBadRequest("Invalid traffic source id")
+		return err
 	}
 
-	body, err := json.Marshal(trafficSource)
+	body, err := json.Marshal(trafficSource.ToResponse())
 
 	if err != nil {
 		return err

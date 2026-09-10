@@ -52,7 +52,7 @@ func (c *CreateTrafficSourceController) Handle(w http.ResponseWriter, r *http.Re
 		return err
 	}
 
-	body, err := json.Marshal(trafficSource)
+	body, err := json.Marshal(trafficSource.ToResponse())
 
 	if err != nil {
 		return err

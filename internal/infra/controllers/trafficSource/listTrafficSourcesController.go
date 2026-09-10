@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/Lucas-Eduardo-Goncalves/arkyn-store/internal/domain/entities"
-	"github.com/Lucas-Eduardo-Goncalves/arkyn-store/internal/infra/adapters"
 )
 
 type listTrafficSourcesUseCase interface {
@@ -25,10 +24,16 @@ func (c *ListTrafficSourcesController) Handle(w http.ResponseWriter, r *http.Req
 	trafficSources, err := c.listTrafficSourcesUseCase.Handle(userId)
 
 	if err != nil {
-		return adapters.NewBadRequest("Invalid user id")
+		return err
 	}
 
-	body, err := json.Marshal(trafficSources)
+	responses := make([]*entities.ResponseTrafficSource, len(trafficSources))
+
+	for i, ts := range trafficSources {
+		responses[i] = ts.ToResponse()
+	}
+
+	body, err := json.Marshal(responses)
 
 	if err != nil {
 		return err

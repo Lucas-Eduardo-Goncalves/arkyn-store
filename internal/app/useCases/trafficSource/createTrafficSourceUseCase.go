@@ -32,7 +32,11 @@ func NewCreateTrafficSourceUseCase(
 }
 
 func (t *CreateTrafficSourceUseCase) Handle(input *CreateTrafficSourceInput) (*entities.TrafficSource, error) {
-	trafficSourceByDomain, _ := t.trafficSourceRepository.FindByDomain(input.UserId, input.TrafficDomain)
+	trafficSourceByDomain, err := t.trafficSourceRepository.FindByDomain(input.UserId, input.TrafficDomain)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if trafficSourceByDomain != nil {
 		return nil, domainErrors.AlreadyExists("There is already a traffic source for this domain.")

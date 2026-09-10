@@ -24,6 +24,14 @@ type RestoreTrafficSourceInput struct {
 	UserId        string
 }
 
+type ResponseTrafficSource struct {
+	ID            string    `json:"id"`
+	Name          string    `json:"name"`
+	CreatedAt     time.Time `json:"createdAt"`
+	UpdatedAt     time.Time `json:"updatedAt"`
+	TrafficDomain string    `json:"trafficDomain"`
+}
+
 type NewTrafficSourceInput struct {
 	Name          string
 	UserId        string
@@ -80,5 +88,15 @@ func (t *TrafficSource) Update(input *UpdateTrafficSourceInput) {
 
 	if changed == true {
 		t.UpdatedAt = input.UpdatedAt
+	}
+}
+
+func (t *TrafficSource) ToResponse() *ResponseTrafficSource {
+	return &ResponseTrafficSource{
+		ID:            t.ID,
+		Name:          t.Name,
+		CreatedAt:     t.CreatedAt,
+		UpdatedAt:     t.UpdatedAt,
+		TrafficDomain: t.TrafficDomain,
 	}
 }
