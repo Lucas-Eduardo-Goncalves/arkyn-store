@@ -11,7 +11,9 @@ import (
 func RegisterTrafficSourceRoutes(mux *http.ServeMux) {
 	trafficSourceRepository := trafficSourceRepositories.NewInMemoryTrafficSourceRepository()
 
-	mux.HandleFunc("GET /traffic-sources/{userId}", contracts.Adapt(trafficSourceFactories.NewListTrafficSourcesFactory(trafficSourceRepository)))
+	mux.HandleFunc("GET /traffic-sources", contracts.Adapt(trafficSourceFactories.NewListTrafficSourcesFactory(trafficSourceRepository)))
+	mux.HandleFunc("GET /traffic-sources/{trafficSourceId}", contracts.Adapt(trafficSourceFactories.NewListTrafficSourceByIdFactory(trafficSourceRepository)))
 	mux.HandleFunc("POST /traffic-sources", contracts.Adapt(trafficSourceFactories.NewCreateTrafficSourceFactory(trafficSourceRepository)))
-	mux.HandleFunc("GET /traffic-sources/unic/{trafficSourceId}", contracts.Adapt(trafficSourceFactories.NewListTrafficSourceByIdFactory(trafficSourceRepository)))
+	mux.HandleFunc("DELETE /traffic-sources/{trafficSourceId}", contracts.Adapt(trafficSourceFactories.NewDeleteTrafficSourceFactory(trafficSourceRepository)))
+	mux.HandleFunc("UPDATE /traffic-sources/{trafficSourceId}", contracts.Adapt(trafficSourceFactories.NewUpdateTrafficSourceFactory(trafficSourceRepository)))
 }

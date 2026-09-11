@@ -41,7 +41,6 @@ type NewTrafficSourceInput struct {
 type UpdateTrafficSourceInput struct {
 	Name          *string
 	TrafficDomain *string
-	UpdatedAt     time.Time
 }
 
 func NewTrafficSource(
@@ -73,22 +72,22 @@ func RestoreTrafficSource(input *RestoreTrafficSourceInput) *TrafficSource {
 	}
 }
 
-func (t *TrafficSource) Update(input *UpdateTrafficSourceInput) {
-	changed := false
+func (t *TrafficSource) Update(
+	input *UpdateTrafficSourceInput,
+	dateGenerator providers.DateGenerator,
+) {
+	date := dateGenerator.Now()
 
 	if input.Name != nil {
 		t.Name = *input.Name
-		changed = true
+		t.UpdatedAt = date
 	}
 
 	if input.TrafficDomain != nil {
 		t.TrafficDomain = *input.TrafficDomain
-		changed = true
+		t.UpdatedAt = date
 	}
 
-	if changed == true {
-		t.UpdatedAt = input.UpdatedAt
-	}
 }
 
 func (t *TrafficSource) ToResponse() *ResponseTrafficSource {

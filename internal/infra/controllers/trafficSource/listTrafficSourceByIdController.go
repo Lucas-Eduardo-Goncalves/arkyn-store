@@ -8,7 +8,7 @@ import (
 )
 
 type listTrafficSourceByIdUseCase interface {
-	Handle(userId string) (*entities.TrafficSource, error)
+	Handle(trafficSourceId string) (*entities.TrafficSource, error)
 }
 
 type ListTrafficSourceByIdController struct {

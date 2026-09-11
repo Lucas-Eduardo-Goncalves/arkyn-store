@@ -25,11 +25,11 @@ func NewCreateTrafficSourceController(createTrafficSourceUseCase createTrafficSo
 type createTrafficSourceRequest struct {
 	Name          string `json:"name" validate:"required"`
 	TrafficDomain string `json:"trafficDomain" validate:"required"`
-	UserId        string `json:"userId" validate:"required"`
 }
 
 func (c *CreateTrafficSourceController) Handle(w http.ResponseWriter, r *http.Request) error {
 	var request createTrafficSourceRequest
+	var userId string = "1"
 
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
@@ -45,7 +45,7 @@ func (c *CreateTrafficSourceController) Handle(w http.ResponseWriter, r *http.Re
 	trafficSource, err := c.createTrafficSourceUseCase.Handle(&trafficSourceUseCases.CreateTrafficSourceInput{
 		Name:          request.Name,
 		TrafficDomain: request.TrafficDomain,
-		UserId:        request.UserId,
+		UserId:        userId,
 	})
 
 	if err != nil {

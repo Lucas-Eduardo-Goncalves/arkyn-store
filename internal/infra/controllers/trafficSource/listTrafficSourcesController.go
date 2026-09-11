@@ -20,7 +20,7 @@ func NewListTrafficSourcesController(listTrafficSourcesUseCase listTrafficSource
 }
 
 func (c *ListTrafficSourcesController) Handle(w http.ResponseWriter, r *http.Request) error {
-	userId := r.PathValue("userId")
+	var userId string = "1"
 	trafficSources, err := c.listTrafficSourcesUseCase.Handle(userId)
 
 	if err != nil {
