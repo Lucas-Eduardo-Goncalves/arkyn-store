@@ -23,13 +23,14 @@ func NewUpdateTrafficSourceController(updateTrafficSourceUseCase updateTrafficSo
 }
 
 type updateTrafficSourceRequest struct {
-	Name          string `json:"name" validate:"omitempty,min=1"`
-	TrafficDomain string `json:"trafficDomain" validate:"omitempty,min=1"`
+	Name          *string `json:"name" validate:"omitempty,min=1"`
+	TrafficDomain *string `json:"trafficDomain" validate:"omitempty,min=1"`
 }
 
 func (c *UpdateTrafficSourceController) Handle(w http.ResponseWriter, r *http.Request) error {
 	var request updateTrafficSourceRequest
 	var userId string = "1"
+	trafficSourceId := r.PathValue("trafficSourceId")
 
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
@@ -43,9 +44,10 @@ func (c *UpdateTrafficSourceController) Handle(w http.ResponseWriter, r *http.Re
 	}
 
 	trafficSource, err := c.updateTrafficSourceUseCase.Handle(&trafficSourceUseCases.UpdateTrafficSourceInput{
-		Name:          &request.Name,
-		TrafficDomain: &request.TrafficDomain,
-		UserId:        userId,
+		Name:            request.Name,
+		TrafficDomain:   request.TrafficDomain,
+		UserId:          userId,
+		TrafficSourceId: trafficSourceId,
 	})
 
 	if err != nil {

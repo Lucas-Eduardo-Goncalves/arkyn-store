@@ -27,7 +27,7 @@ func (c *DeleteTrafficSourceController) Handle(w http.ResponseWriter, r *http.Re
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 
 	return nil
 }
